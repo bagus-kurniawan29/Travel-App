@@ -23,7 +23,7 @@ class CustomBottomNav extends StatelessWidget {
       ],
       color: Colors.blue, // Warna bar
       buttonBackgroundColor: Colors.blue,
-      backgroundColor: Colors.transparent, 
+      backgroundColor: Colors.transparent,
       animationCurve: Curves.easeInOut,
       animationDuration: const Duration(milliseconds: 500),
       onTap: onTap,

@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Iphone 14 Frame',
+      title: 'Travell appu',
       home:
           Platform.isAndroid || Platform.isIOS
               ? const MainScreen()
@@ -22,6 +22,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;

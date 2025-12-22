@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true, 
+      extendBody: true,
       body: _pages[_selectedIndex],
       bottomNavigationBar: CustomBottomNav(
         currentIndex: _selectedIndex,

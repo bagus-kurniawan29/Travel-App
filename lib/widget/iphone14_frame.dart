@@ -9,35 +9,64 @@ class IPhone14Frame extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: AspectRatio(
-        aspectRatio: 400 / 840,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // 💡 Latar belakang putih agar frame menyatu dengan layar
-            Container(color: Colors.white),
-
-            // 💡 Clip agar konten tidak keluar dari frame
-            ClipRRect(
-              borderRadius: BorderRadius.circular(
-                20,
-              ), // bisa diubah kalau pinggir frame membulat
-              child: SafeArea(
-                minimum: const EdgeInsets.only(top: 50.0),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: child,
+        aspectRatio: 393 / 852, // Aspek rasio asli iPhone 14 Pro
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(55),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.5),
+                blurRadius: 30,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          // PERBAIKAN: Gunakan 'child', bukan 'container'
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // 1. Background Luar (Bezel)
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(55),
                 ),
               ),
-            ),
 
-            // 💡 Frame iPhone
-            IgnorePointer(
-              child: Image.asset(
-                'assets/frame/iphone Frame.png',
-                fit: BoxFit.cover,
+              // 2. Layar Konten
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(47),
+                  child: Container(color: Colors.white, child: child),
+                ),
               ),
-            ),
-          ],
+              // 4. Image Frame
+              IgnorePointer(
+                child: Image.asset(
+                  'assets/frame/iphone Frame.png',
+                  fit: BoxFit.fill,
+                ),
+              ),
+
+              // 5. Home Indicator
+              Positioned(
+                bottom: 15,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Container(
+                    width: 120,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

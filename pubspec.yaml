@@ -61,6 +61,9 @@ flutter:
   assets:
       - assets/frame/iphone Frame.png
       - assets/frame/non Frame.png
+      - assets/img/desa adat bele.png
+      - assets/img/masjid adat gumantar.jpg
+      - assets/img/air terjun tiu ngumbak.webp
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

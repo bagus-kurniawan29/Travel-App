@@ -10,14 +10,14 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
+// lib/screens/main_screen.dart
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
-
   final List<Widget> _pages = [
     const HomeScreen(),
     const DiscoverScreen(),
-    const Center(child: Text("My Order Page")),
-    const Center(child: Text("Favorite Page")),
+    const Center(child: Text("Orders")),
+    const Center(child: Text("Favorites")),
   ];
 
   @override
@@ -27,11 +27,7 @@ class _MainScreenState extends State<MainScreen> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: CustomBottomNav(
         currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+        onTap: (index) => setState(() => _selectedIndex = index),
       ),
     );
   }

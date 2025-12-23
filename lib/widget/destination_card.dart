@@ -32,7 +32,6 @@ class DestinationCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Menggunakan Stack untuk menaruh rating di atas gambar
               Stack(
                 children: [
                   ClipRRect(

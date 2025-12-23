@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:travel_app/screens/Test.dart';
 import 'package:travel_app/widget/destination_card.dart';
 import 'dart:async';
+import 'package:travel_app/widget/detail_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   // 1. Definisikan Controller
-  final PageController _pageController = PageController(viewportFraction: 0.85);
+  final PageController _pageController = PageController(viewportFraction: 0.99);
   Timer? _timer;
   int _currentPage = 0;
   final List<String> _galleryImages = [
@@ -20,6 +24,45 @@ class _HomeScreenState extends State<HomeScreen> {
     'assets/img/air terjun tiu ngumbak.webp',
     'assets/img/masjid adat gumantar.jpg',
   ];
+  final LatLng _tujuan = const LatLng(-8.2877237, 116.2954221);
+  Set<Polyline> _polylines = {};
+  void buatRute() async {
+    Position pos = await Geolocator.getCurrentPosition();
+    PolylinePoints polylinePoints = PolylinePoints();
+
+    // FORMAT BARU: Gunakan nama parameter (Named Arguments)
+    PolylineRequest request = PolylineRequest(
+      origin: PointLatLng(pos.latitude, pos.longitude),
+      destination: PointLatLng(_tujuan.latitude, _tujuan.longitude),
+      mode: TravelMode.driving,
+      // Masukkan API Key kamu di sini
+    );
+
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      googleApiKey:
+          "AIzaSyCxmPiVRwyPQwuo1gxi4SpWeCa0xT359Rg", // Pakai googleApiKey:
+      request: request,
+    );
+
+    if (result.points.isNotEmpty) {
+      List<LatLng> titikGaris =
+          result.points.map((p) => LatLng(p.latitude, p.longitude)).toList();
+
+      setState(() {
+        _polylines.add(
+          Polyline(
+            polylineId: const PolylineId("rute_wisata"),
+            points: titikGaris,
+            color: Colors.blue,
+            width: 5,
+          ),
+        );
+      });
+    } else {
+      print("gagal mengambil rute ${result.errorMessage}");
+    }
+  }
+
   Widget _buildGalleryItem(String path) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -29,7 +72,6 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Image.asset(
           path,
           fit: BoxFit.cover,
-          // Error handler kalau path gambar salah
           errorBuilder:
               (context, error, stackTrace) => Container(
                 color: Colors.grey[300],
@@ -43,13 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // 2. Jalankan Timer saat halaman dibuka
     _timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
       if (_currentPage < _galleryImages.length - 1) {
         _currentPage++;
-      } else {
-        _currentPage = 0; // Kembali ke awal jika sudah di akhir
-      }
+      } else {}
 
       if (_pageController.hasClients) {
         _pageController.animateToPage(
@@ -63,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-    // 3. PENTING: Matikan timer saat halaman ditutup agar tidak memory leak
     _timer?.cancel();
     _pageController.dispose();
     super.dispose();
@@ -150,7 +188,23 @@ class _HomeScreenState extends State<HomeScreen> {
                           location: 'Lombok utara',
                           price: 'Rp 1.500.000',
                           rating: 4.9,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const DetailWidget(
+                                      judul: "Desa Adat Gumantar",
+                                      lokasi: "Lombok Utara, NTB",
+                                      imagePath:
+                                          "assets/img/desa adat bele.png",
+                                      harga: "Rp 1.500.000",
+                                      rating: 4.9,
+                                      deskripsi:
+                                          "Desa Adat Gumantar, terletak di Kecamatan Kayangan, Lombok Utara, adalah salah satu kampung kuno tertua di Lombok (sejak 1257) yang melestarikan arsitektur dan adat Sasak. Terkenal dengan Dusun Beleq, desa ini memiliki 40+ rumah adat tahan gempa dari bambu dan atap jerami. Desa ini menyuguhkan wisata budaya, sejarah, dan lingkungan asri. ",
+                                    ),
+                              ),
+                            );
+                          },
                         ),
                         DestinationCard(
                           imagepath: 'assets/img/masjid adat gumantar.jpg',
@@ -158,7 +212,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           location: 'Lombok utara',
                           price: 'Rp 2.000.000',
                           rating: 4.7,
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => const DetailWidget(
+                                      judul: "Masjid Adat \nGumantar",
+                                      lokasi: "Kabupaten Lombok Utara",
+                                      deskripsi: "Masjid Kuno Gumantar merupakan salah satu masjid kuno tertua di pulau Lombok, Nusa Tenggara Barat (NTB) dan merupakan salah dari dua Masjid tertua di kabupaten Lombok utara selain Masjid Bayan Beleq. Keberadaan Masjid Kuno ini diperkirakan berkaitan dengan masa awal penyebaran Agama Islam di Pulau Lombok sekitar abad ke 17 Masehi.",
+                                      harga: "Rp 2.000.000",
+                                      imagePath: "assets/img/masjid adat gumantar.jpg",
+                                      rating: 4.7,
+                                    ),
+                              ),
+                            );
+                          },
                         ),
                         DestinationCard(
                           imagepath: 'assets/img/air terjun tiu ngumbak.webp',
@@ -287,10 +355,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text(
                         "Galeri",
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      SizedBox(height: 15),
                       SizedBox(
                         height: 200,
                         child: PageView.builder(
@@ -302,12 +371,45 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                         ),
                       ),
-                      const SizedBox(height: 100),
+                      const SizedBox(height: 12),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        "Peta",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 300,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                              target: _tujuan,
+                              zoom: 40,
+                            ),
+                            myLocationButtonEnabled: true,
+                            polylines: _polylines,
+                            markers: {
+                              Marker(
+                                markerId: const MarkerId("Tujuan"),
+                                position: _tujuan,
+                              ),
+                            },
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ],
               ),
             ),
+            SizedBox(height: 50),
           ],
         ),
       ),

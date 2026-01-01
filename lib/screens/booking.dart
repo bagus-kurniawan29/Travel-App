@@ -54,8 +54,7 @@ class Booking extends StatelessWidget {
               ),
               SizedBox(
                 width: double.infinity,
-                height: 45,
-                child: ,
+                height: 45
               )
             ],
           )

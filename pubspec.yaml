@@ -30,9 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_maps_flutter: ^2.5.3   
-  geolocator: ^10.1.0             
+  google_maps_flutter: ^2.5.3                
   flutter_polyline_points: ^2.0.0
+  geolocator: ^13.0.0  # Pastikan versi terbaru
+  flutter_map: ^7.0.0  # Pengganti Google Maps untuk Windows
+  latlong2: ^0.9.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -64,10 +66,12 @@ flutter:
   assets:
       - assets/frame/iphone Frame.png
       - assets/frame/non Frame.png
-      - assets/img/desa adat bele.png
-      - assets/img/masjid adat gumantar.jpg
-      - assets/img/air terjun tiu ngumbak.webp
-
+      - assets/img/Rinjani.jpg
+      - assets/img/rinjani 1.png
+      - assets/img/rinjani 2.jpg
+      - assets/img/rinjani 3.jpeg
+      - assets/img/rinjani 4.webp
+      - assets/img/rinjani 5.jpg
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

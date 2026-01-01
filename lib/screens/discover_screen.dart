@@ -6,8 +6,7 @@ class DiscoverScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Discover Screen')),
-      body: const Center(child: Text('Welcome to the Discover Screen!')),
+      body: const Center(child: Text('Belum ada tiket yang anda pesan')),
     );
   }
 }

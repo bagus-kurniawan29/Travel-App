@@ -16,8 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _pages = [
     const HomeScreen(),
     const DiscoverScreen(),
-    const Center(child: Text("Orders")),
-    const Center(child: Text("Favorites")),
+    const Center(child: Text("Profile")),
   ];
 
   @override

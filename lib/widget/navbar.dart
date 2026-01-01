@@ -10,18 +10,27 @@ class CustomBottomNav extends StatelessWidget {
     required this.currentIndex,
     required this.onTap,
   });
+
   @override
   Widget build(BuildContext context) {
     return CurvedNavigationBar(
       index: currentIndex,
       height: 60.0,
+      // PERBAIKAN ICON DISINI:
       items: const <Widget>[
-        Icon(Icons.home, size: 30, color: Colors.white),
-        Icon(Icons.explore, size: 30, color: Colors.white),
-        Icon(Icons.assignment, size: 30, color: Colors.white),
-        Icon(Icons.favorite, size: 30, color: Colors.white),
+        Icon(Icons.home, size: 30, color: Colors.white), // Index 0: Home
+        Icon(
+          Icons.assignment,
+          size: 30,
+          color: Colors.white,
+        ), // Index 1: Discover (Ganti Icons.abc jadi explore)
+        Icon(
+          Icons.person,
+          size: 30,
+          color: Colors.white,
+        ), // Index 2: Orders (Ganti Icons.person jadi receipt jika halaman Orders)
       ],
-      color: Colors.blue, // Warna bar
+      color: Colors.blue,
       buttonBackgroundColor: Colors.blue,
       backgroundColor: Colors.transparent,
       animationCurve: Curves.easeInOut,

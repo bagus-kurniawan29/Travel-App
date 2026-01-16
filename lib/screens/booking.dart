@@ -1,6 +1,4 @@
 import "package:flutter/material.dart";
-import "package:travel_app/screens/home_screen.dart";
-import "package:travel_app/screens/main_screen.dart";
 
 class Booking extends StatelessWidget {
   const Booking({super.key});

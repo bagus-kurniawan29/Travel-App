@@ -5,7 +5,6 @@ import 'screens/main_screen.dart';
 void main() {
   runApp(const MyApp());
 }
-
 // lib/main.dart
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -18,11 +18,11 @@ class _HomeScreenState extends State<HomeScreen>
   late AnimationController _controller;
 
   final List<String> _galleryImages = [
-    'asset/img/rinjani 1.png',
-    'asset/img/rinjani 2.jpg',
-    'asset/img/rinjani 3.jpeg',
-    'asset/img/rinjani 4.webp',
-    'asset/img/rinjani 5.jpg',
+    'assets/img/rinjani 1.png',
+    'assets/img/rinjani 2.jpg',
+    'assets/img/rinjani 3.jpeg',
+    'assets/img/rinjani 4.webp',
+    'assets/img/rinjani 5.jpg',
   ];
 
   @override
@@ -160,6 +160,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
 
                       const SizedBox(height: 30),
+
                       const Text(
                         "Galeri Momen",
                         style: TextStyle(
@@ -202,7 +203,9 @@ class _HomeScreenState extends State<HomeScreen>
                           },
                         ),
                       ),
-                      SizedBox(height: 23),
+
+                      const SizedBox(height: 23),
+
                       const Text(
                         "Lokasi & Rute",
                         style: TextStyle(
@@ -213,7 +216,6 @@ class _HomeScreenState extends State<HomeScreen>
 
                       const SizedBox(height: 8),
 
-                      // 2. Deskripsi Singkat
                       Text(
                         "Rute otomatis dari lokasi Anda menuju Basecamp Senaru.",
                         style: TextStyle(color: Colors.grey[600], fontSize: 12),
@@ -221,13 +223,65 @@ class _HomeScreenState extends State<HomeScreen>
 
                       const SizedBox(height: 15),
 
-                      // 3. WIDGET MAP (Memanggil file map_widget.dart)
-                      // Pastikan Anda sudah membuat file map_widget.dart sebelumnya
-                      const RinjaniMapWidget(),
+                      SizedBox(
+                        height: 300,
+                        width: double.infinity,
+                        child: const MapWidget(),
+                      ),
 
-                      // 4. Jarak Ekstra di Bawah (Agar tidak ketutup tombol Booking)
+                      const SizedBox(height: 20),
+
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 20),
+                          const Text(
+                            "Apa Yang orang bilang tentang destinasi ini?",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Card(
+                            shadowColor: Color(0xFFE0E0E0),
+                            color: Colors.white,
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.blue,
+                                child: Icon(Icons.person, color: Colors.white),
+                              ),
+                              title: Text(
+                                "Andi Pratama",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(
+                                "Pendakian yang menantang namun sangat memuaskan! Pemandangan dari puncak luar biasa.",
+                              ),
+                            ),
+                          ),
+                          const Card(
+                            shadowColor: Color(0xFFE0E0E0),
+                            color: Colors.white,
+                            margin: EdgeInsets.symmetric(vertical: 8),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: Colors.blue,
+                                child: Icon(Icons.person, color: Colors.white),
+                              ),
+                              title: Text(
+                                "Bayu Prayoga",
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                              subtitle: Text(
+                                "Pupuk lengkap mantap bisa menumbuhkan segala macam batang whahahaha",
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(height: 100),
-                      SizedBox(height: 40),
                     ],
                   ),
                 ),

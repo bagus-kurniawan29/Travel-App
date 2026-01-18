@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -13,29 +12,35 @@ class CustomBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CurvedNavigationBar(
-      index: currentIndex,
-      height: 60.0,
-      // PERBAIKAN ICON DISINI:
-      items: const <Widget>[
-        Icon(Icons.home, size: 30, color: Colors.white), // Index 0: Home
-        Icon(
-          Icons.assignment,
-          size: 30,
-          color: Colors.white,
-        ), // Index 1: Discover (Ganti Icons.abc jadi explore)
-        Icon(
-          Icons.person,
-          size: 30,
-          color: Colors.white,
-        ), // Index 2: Orders (Ganti Icons.person jadi receipt jika halaman Orders)
-      ],
-      color: Colors.blue,
-      buttonBackgroundColor: Colors.blue,
-      backgroundColor: Colors.transparent,
-      animationCurve: Curves.easeInOut,
-      animationDuration: const Duration(milliseconds: 500),
+    return BottomNavigationBar(
+      currentIndex: currentIndex,
       onTap: onTap,
+      backgroundColor: Colors.blue, // Warna latar navbar
+      selectedItemColor: Colors.white, // Warna icon yang DIPILIH (Aktif)
+      unselectedItemColor: Colors.white.withOpacity(
+        0.6,
+      ), // Warna icon yang TIDAK dipilih (lebih redup)
+      showSelectedLabels:
+          false, // Hilangkan label teks jika ingin mirip curved navbar
+      showUnselectedLabels: false, // Hilangkan label teks
+      type: BottomNavigationBarType.fixed, // Pastikan posisi icon stabil
+      items: const [
+        // Index 0: Home
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home, size: 30),
+          label: 'Home',
+        ),
+        // Index 1: Discover (Assignment)
+        BottomNavigationBarItem(
+          icon: Icon(Icons.assignment, size: 30),
+          label: 'Discover',
+        ),
+        // Index 2: Profile (Person)
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person, size: 30),
+          label: 'Profile',
+        ),
+      ],
     );
   }
 }

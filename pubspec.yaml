@@ -35,6 +35,7 @@ dependencies:
   geolocator: ^13.0.0  # Pastikan versi terbaru
   flutter_map: ^7.0.0  # Pengganti Google Maps untuk Windows
   latlong2: ^0.9.1
+  http: ^1.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

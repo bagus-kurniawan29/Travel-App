@@ -1,170 +1,174 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class RinjaniMapWidget extends StatefulWidget {
-  const RinjaniMapWidget({super.key});
+class MapWidget extends StatefulWidget {
+  const MapWidget({super.key});
 
   @override
-  State<RinjaniMapWidget> createState() => _RinjaniMapWidgetState();
+  State<MapWidget> createState() => _MapWidgetState();
 }
 
-class _RinjaniMapWidgetState extends State<RinjaniMapWidget> {
-  final Completer<GoogleMapController> _controller = Completer();
+class _MapWidgetState extends State<MapWidget> {
+  // Lokasi default (Contoh: Monas)
+  LatLng _currentPosition = const LatLng(-6.175392, 106.827153);
+  // Lokasi Tujuan (Contoh: Gunung Rinjani / Sesuaikan dengan tujuan app Anda)
+  final LatLng _destination = const LatLng(-8.4113, 116.4573);
 
-  // Lokasi Tujuan (Gunung Rinjani - Senaru)
-  static const LatLng _destination = LatLng(-8.3249, 116.4069);
-
-  // Lokasi User (Akan diisi otomatis)
-  LatLng? _currentPosition;
-
-  // Data Marker & Rute
-  final Set<Marker> _markers = {};
-  final Set<Polyline> _polylines = {};
-
-  // API Key (Gunakan key yang sama dengan di AndroidManifest)
-  String googleApiKey = "AIzaSyCxmPiVRwyPQwuo1gxi4SpWeCa0xT359Rg";
+  List<LatLng> _routePoints = [];
+  final MapController _mapController = MapController();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _getUserLocation();
+    _initializeMap();
   }
 
-  // 1. Ambil Lokasi User
-  Future<void> _getUserLocation() async {
-    // Cek Izin Lokasi
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-    }
-
-    // Ambil Koordinat
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
-    );
-
-    setState(() {
-      _currentPosition = LatLng(position.latitude, position.longitude);
-
-      // Tambahkan Marker
-      _markers.add(
-        Marker(
-          markerId: const MarkerId("user"),
-          position: _currentPosition!,
-          infoWindow: const InfoWindow(title: "Lokasi Saya"),
-        ),
-      );
-      _markers.add(
-        const Marker(
-          markerId: MarkerId("dest"),
-          position: _destination,
-          infoWindow: InfoWindow(title: "Gunung Rinjani"),
-        ),
-      );
-    });
-
-    // Buat Rute setelah lokasi didapat
-    _getRoute();
+  Future<void> _initializeMap() async {
+    await _determinePosition();
+    await _getRouteOSRM(); // Panggil rute gratis
   }
 
-  // 2. Gambar Rute (Polyline)
-  Future<void> _getRoute() async {
-    if (_currentPosition == null) return;
-
-    PolylinePoints polylinePoints = PolylinePoints();
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      googleApiKey: googleApiKey,
-      request: PolylineRequest(
-        origin: PointLatLng(
-          _currentPosition!.latitude,
-          _currentPosition!.longitude,
-        ),
-        destination: PointLatLng(_destination.latitude, _destination.longitude),
-        mode: TravelMode.driving,
-      ),
-    );
-    if (result.points.isNotEmpty) {
-      List<LatLng> polylineCoordinates = [];
-      for (var point in result.points) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+  // 1. Fungsi Cek Lokasi User (Aman untuk Windows & HP)
+  Future<void> _determinePosition() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        // Jika GPS mati, pakai lokasi default dulu biar gak crash
+        setState(() => _isLoading = false);
+        return;
       }
 
-      setState(() {
-        _polylines.add(
-          Polyline(
-            polylineId: const PolylineId("route"),
-            points: polylineCoordinates,
-            color: Colors.blue[800]!,
-            width: 5,
-          ),
-        );
-      });
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          setState(() => _isLoading = false);
+          return;
+        }
+      }
 
-      // Zoom Camera agar muat semua marker
-      final GoogleMapController controller = await _controller.future;
-      controller.animateCamera(
-        CameraUpdate.newLatLngBounds(
-          _boundsFromLatLngList([_currentPosition!, _destination]),
-          50,
+      // Ambil lokasi
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.medium,
         ),
       );
+
+      if (mounted) {
+        setState(() {
+          _currentPosition = LatLng(position.latitude, position.longitude);
+        });
+      }
+    } catch (e) {
+      debugPrint("Error Lokasi: $e");
     }
   }
 
-  // Helper untuk Zoom otomatis
-  LatLngBounds _boundsFromLatLngList(List<LatLng> list) {
-    double? x0, x1, y0, y1;
-    for (LatLng latLng in list) {
-      if (x0 == null) {
-        x0 = x1 = latLng.latitude;
-        y0 = y1 = latLng.longitude;
-      } else {
-        if (latLng.latitude > x1!) x1 = latLng.latitude;
-        if (latLng.latitude < x0) x0 = latLng.latitude;
-        if (latLng.longitude > y1!) y1 = latLng.longitude;
-        if (latLng.longitude < y0!) y0 = latLng.longitude;
+  // 2. Fungsi Ambil Rute GRATIS (OSRM) - Pengganti Google
+  Future<void> _getRouteOSRM() async {
+    // Format URL OSRM: (Longitude,Latitude) <-- Dibalik!
+    final String url =
+        'http://router.project-osrm.org/route/v1/driving/'
+        '${_currentPosition.longitude},${_currentPosition.latitude};'
+        '${_destination.longitude},${_destination.latitude}'
+        '?overview=full&geometries=geojson';
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final geometry = data['routes'][0]['geometry']['coordinates'] as List;
+
+        // Konversi data JSON ke LatLng Flutter
+        final List<LatLng> points =
+            geometry.map((p) {
+              return LatLng(p[1].toDouble(), p[0].toDouble());
+            }).toList();
+
+        if (mounted) {
+          setState(() {
+            _routePoints = points;
+            _isLoading = false;
+          });
+          // Arahkan kamera supaya rute terlihat semua
+          // (Opsional, bisa manual)
+        }
       }
+    } catch (e) {
+      debugPrint("Gagal ambil rute OSRM: $e");
+      if (mounted) setState(() => _isLoading = false);
     }
-    return LatLngBounds(
-      northeast: LatLng(x1!, y1!),
-      southwest: LatLng(x0!, y0!),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_currentPosition == null) {
-      return const SizedBox(
-        height: 250,
-        child: Center(child: CircularProgressIndicator()),
-      );
-    }
-
-    return Container(
-      height: 300,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.shade200),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: GoogleMap(
-          mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-            target: _currentPosition!,
-            zoom: 14,
+    return Scaffold(
+      body: Stack(
+        children: [
+          FlutterMap(
+            mapController: _mapController,
+            options: MapOptions(
+              initialCenter: _currentPosition,
+              initialZoom: 13.0,
+            ),
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.example.travel_app',
+              ),
+              // Garis Rute (Biru)
+              PolylineLayer(
+                polylines: [
+                  Polyline(
+                    points: _routePoints,
+                    color: Colors.blue,
+                    strokeWidth: 5.0,
+                  ),
+                ],
+              ),
+              // Marker User & Tujuan
+              MarkerLayer(
+                markers: [
+                  Marker(
+                    point: _currentPosition,
+                    width: 40,
+                    height: 40,
+                    child: const Icon(
+                      Icons.my_location,
+                      color: Colors.blue,
+                      size: 40,
+                    ),
+                  ),
+                  Marker(
+                    point: _destination,
+                    width: 40,
+                    height: 40,
+                    child: const Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                      size: 40,
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          markers: _markers,
-          polylines: _polylines,
-          myLocationEnabled: true,
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-          },
-        ),
+          if (_isLoading)
+            const Center(
+              child: Card(
+                child: Padding(
+                  padding: EdgeInsets.all(12.0),
+                  child: Text("Memuat Rute..."),
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }

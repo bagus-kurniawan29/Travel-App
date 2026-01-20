@@ -1,10 +1,12 @@
-import 'package:flutter/foundation.dart'; 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:travel_app/widget/iphone14_frame.dart'; 
-import 'screens/main_screen.dart'; 
+import 'package:travel_app/widget/iphone14_frame.dart';
+import 'screens/main_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -20,15 +22,10 @@ class MyApp extends StatelessWidget {
             defaultTargetPlatform == TargetPlatform.linux;
         if (isDesktopOrWeb) {
           return Scaffold(
-            backgroundColor:
-                Colors.black, 
-            body: Center(
-              
-              child: IPhone14Frame(child: child!),
-            ),
+            backgroundColor: Colors.black,
+            body: Center(child: IPhone14Frame(child: child!)),
           );
-        }
-        else {
+        } else {
           return child!;
         }
       },

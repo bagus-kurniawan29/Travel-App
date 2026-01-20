@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/screens/discover_screen.dart';
+import 'package:travel_app/screens/daftar_ticket.dart';
 import '../widget/navbar.dart';
 import 'package:travel_app/screens/home_screen.dart';
 
@@ -15,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   final List<Widget> _pages = [
     const HomeScreen(),
-    const DiscoverScreen(),
+    const DaftarTicket(),
     const Center(child: Text("Profile")),
   ];
 

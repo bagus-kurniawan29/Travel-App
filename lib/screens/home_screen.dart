@@ -138,8 +138,8 @@ class _HomeScreenState extends State<HomeScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _buildInfoItem(Icons.terrain, "3726 mdpl", "Tinggi"),
-                          _buildInfoItem(Icons.thermostat, "12°C", "Suhu"),
-                          _buildInfoItem(Icons.schedule, "3 Hari", "Durasi"),
+                          _buildInfoItem(Icons.thermostat, "32°C", "Suhu"),
+                          _buildInfoItem(Icons.sunny, "Cerah", "Cuaca"),
                           _buildInfoItem(Icons.map, "Senaru", "Jalur"),
                         ],
                       ),

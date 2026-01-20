@@ -1,8 +1,15 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
-class Booking extends StatelessWidget {
+class Booking extends StatefulWidget {
   const Booking({super.key});
 
+  @override
+  State<Booking> createState() => _BookingState();
+}
+
+class _BookingState extends State<Booking> {
+  bool guide = false;
+  int price = 1500000;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -84,7 +91,33 @@ class Booking extends StatelessWidget {
                           ),
                         ),
                       ),
-
+                      const SizedBox(height: 20),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Butuh Pemandu Wisata?", style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            
+                          ),
+                          ),
+                          ElevatedButton(style: ElevatedButton.styleFrom(
+                            backgroundColor: guide ? Colors.blue[800] : Colors.grey[300],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ), onPressed: () {
+                            setState(() {
+                              guide = !guide;
+                              if (guide) {
+                                price += 500000;
+                              } else {
+                                price -= 500000;
+                              }
+                            });
+                          }, child: Text(guide ? "Ya" : "Tidak", style: TextStyle(color: guide ? Colors.white : Colors.black),))
+                        ],
+                      ),
                       const SizedBox(height: 40),
 
                       SizedBox(

@@ -12,7 +12,7 @@ class MapWidget extends StatefulWidget {
   State<MapWidget> createState() => _MapWidgetState();
 }
 
-class _MapWidgetState extends State<MapWidget> {
+class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
   // Lokasi default (Contoh: Monas)
   LatLng _currentPosition = const LatLng(-6.175392, 106.827153);
   // Lokasi Tujuan (Contoh: Gunung Rinjani / Sesuaikan dengan tujuan app Anda)
@@ -21,6 +21,48 @@ class _MapWidgetState extends State<MapWidget> {
   List<LatLng> _routePoints = [];
   final MapController _mapController = MapController();
   bool _isLoading = true;
+  void _moveToCurrentLocation() async {
+    await _determinePosition();
+    _mapController.move(_currentPosition, 13.0);
+    _animatedMapMove(_currentPosition, 13.0);
+  }
+
+  void _animatedMapMove(LatLng destLocation, double destZoom) {
+    final latTween = Tween<double>(
+      begin: _mapController.camera.center.latitude,
+      end: destLocation.latitude,
+    );
+    final lngTween = Tween<double>(
+      begin: _mapController.camera.center.longitude,
+      end: destLocation.longitude,
+    );
+    final zoomTween = Tween<double>(
+      begin: _mapController.camera.zoom,
+      end: destZoom,
+    );
+    final controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    final Animation<double> animation = CurvedAnimation(
+      parent: controller,
+      curve: Curves.fastOutSlowIn,
+    );
+    controller.addListener(() {
+      _mapController.move(
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+      );
+    });
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+    controller.forward();
+  }
 
   @override
   void initState() {
@@ -30,19 +72,16 @@ class _MapWidgetState extends State<MapWidget> {
 
   Future<void> _initializeMap() async {
     await _determinePosition();
-    await _getRouteOSRM(); // Panggil rute gratis
+    await _getRouteOSRM();
   }
 
-  // 1. Fungsi Cek Lokasi User (Aman untuk Windows & HP)
   Future<void> _determinePosition() async {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        // Jika GPS mati, pakai lokasi default dulu biar gak crash
         setState(() => _isLoading = false);
         return;
       }
-
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
@@ -51,8 +90,6 @@ class _MapWidgetState extends State<MapWidget> {
           return;
         }
       }
-
-      // Ambil lokasi
       Position position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.medium,
@@ -69,9 +106,7 @@ class _MapWidgetState extends State<MapWidget> {
     }
   }
 
-  // 2. Fungsi Ambil Rute GRATIS (OSRM) - Pengganti Google
   Future<void> _getRouteOSRM() async {
-    // Format URL OSRM: (Longitude,Latitude) <-- Dibalik!
     final String url =
         'http://router.project-osrm.org/route/v1/driving/'
         '${_currentPosition.longitude},${_currentPosition.latitude};'
@@ -84,8 +119,6 @@ class _MapWidgetState extends State<MapWidget> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         final geometry = data['routes'][0]['geometry']['coordinates'] as List;
-
-        // Konversi data JSON ke LatLng Flutter
         final List<LatLng> points =
             geometry.map((p) {
               return LatLng(p[1].toDouble(), p[0].toDouble());
@@ -96,8 +129,6 @@ class _MapWidgetState extends State<MapWidget> {
             _routePoints = points;
             _isLoading = false;
           });
-          // Arahkan kamera supaya rute terlihat semua
-          // (Opsional, bisa manual)
         }
       }
     } catch (e) {
@@ -122,7 +153,17 @@ class _MapWidgetState extends State<MapWidget> {
                 urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.travel_app',
               ),
-              // Garis Rute (Biru)
+              Positioned(
+                bottom: 10,
+                right: 10,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    _moveToCurrentLocation();
+                  },
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.my_location, color: Colors.blue),
+                ),
+              ),
               PolylineLayer(
                 polylines: [
                   Polyline(
@@ -132,7 +173,6 @@ class _MapWidgetState extends State<MapWidget> {
                   ),
                 ],
               ),
-              // Marker User & Tujuan
               MarkerLayer(
                 markers: [
                   Marker(

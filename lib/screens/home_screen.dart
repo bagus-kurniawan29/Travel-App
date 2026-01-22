@@ -2,6 +2,27 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import '../widget/map_widget.dart';
 import 'package:travel_app/screens/booking.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+Future<Map<String, dynamic>> getWeatherData(
+  double latitude,
+  double longitude,
+) async {
+  const String apiKey = '28140c530dc329414ae0eca71573b566';
+  final String url =
+      'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey&units=metric&lang=id';
+  final response = await http.get(Uri.parse(url));
+
+  if (response.statusCode == 200) {
+    return json.decode(response.body);
+  } else {
+    // Tambahkan print ini untuk melihat alasan gagal di console
+    print("Status Code: ${response.statusCode}");
+    print("Response Body: ${response.body}");
+    throw Exception('Failed to load weather data');
+  }
+}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -138,8 +159,55 @@ class _HomeScreenState extends State<HomeScreen>
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           _buildInfoItem(Icons.terrain, "3726 mdpl", "Tinggi"),
-                          _buildInfoItem(Icons.thermostat, "32°C", "Suhu"),
-                          _buildInfoItem(Icons.sunny, "Cerah", "Cuaca"),
+                          FutureBuilder<Map<String, dynamic>>(
+                            future: getWeatherData(-8.41, 116.45),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                var data = snapshot.data!;
+                                int temp = data['main']['temp'].toInt();
+                                String condition = data['weather'][0]['main'];
+                                String desc = data['weather'][0]['description'];
+                                IconData weatherIcon = Icons.wb_sunny;
+                                if (condition == "Clear") {
+                                  weatherIcon = Icons.wb_sunny;
+                                  desc = "Cerah";
+                                } else if (condition == "Clouds") {
+                                  weatherIcon = Icons.wb_cloudy;
+                                  desc = "Berawan";
+                                } else if (condition == "Rain") {
+                                  weatherIcon = Icons.umbrella;
+                                  desc = "Hujan";
+                                } else {
+                                  weatherIcon = Icons.cloud;
+                                  desc = "Berawan";
+                                }
+                                return Row(
+                                  children: [
+                                    _buildInfoItem(
+                                      Icons.thermostat,
+                                      "$temp°C",
+                                      "Suhu",
+                                    ),
+                                    SizedBox(width: 40),
+                                    _buildInfoItem(weatherIcon, desc, "Cuaca"),
+                                  ],
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text(
+                                  "${snapshot.error}",
+                                  style: TextStyle(
+                                    fontSize: 8,
+                                    color: Colors.red,
+                                  ),
+                                );
+                              }
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              );
+                            },
+                          ),
                           _buildInfoItem(Icons.map, "Senaru", "Jalur"),
                         ],
                       ),
@@ -275,13 +343,13 @@ class _HomeScreenState extends State<HomeScreen>
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                               subtitle: Text(
-                                "Pupuk lengkap mantap bisa menumbuhkan segala macam batang whahahaha",
+                                "Tim guide sangat profesional dan ramah. Sangat membantu selama pendakian.",
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 100),
+                      const SizedBox(height: 40),
                     ],
                   ),
                 ),
@@ -428,6 +496,8 @@ class _HomeScreenState extends State<HomeScreen>
         const SizedBox(height: 4),
         Text(
           value,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
         ),
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10)),

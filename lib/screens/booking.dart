@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travel_app/screens/ticket.dart';
 import 'dart:math';
+import 'package:travel_app/database/database.dart';
 
 class TicketData {
   final String id;
@@ -20,6 +21,28 @@ class TicketData {
     required this.total,
     required this.tanggalPemesanan,
   });
+  Map<String, dynamic> databaseticket () {
+    return {
+      'id': id,
+      'nama': nama,
+      'noTelp': noTelp,
+      'jumlah': jumlah,
+      'pemandu': pemandu,
+      'total': total,
+      'tanggalPemesanan': tanggalPemesanan.toIso8601String(),
+    };
+  }
+  factory TicketData.ticketdatabase(Map<String, dynamic> map) {
+  return TicketData(
+    id: map['id'],
+    nama: map['nama'],
+    noTelp: map['noTelp'],
+    jumlah: map['jumlah'],
+    pemandu: map['pemandu'],
+    total: map['total'],
+    tanggalPemesanan: DateTime.parse(map['tanggalPemesanan']),
+  );
+}
 }
 
 // ignore: non_constant_identifier_names
@@ -333,7 +356,7 @@ class _BookingState extends State<Booking> {
                 ),
                 SizedBox(height: 30),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (nameController.text.isEmpty ||
                         phoneController.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -355,10 +378,24 @@ class _BookingState extends State<Booking> {
                       ),
                       tanggalPemesanan: DateTime.now(),
                     );
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => Ticket(ticket: ticket)),
-                    );
+                    try {
+                      await DatabaseHelper().insertTicket(ticket.databaseticket());
+                      if (mounted) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => Ticket(ticket: ticket),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text("Gagal menyimpan ke database: $e"),
+                        ),
+                      );
+                      print("Detail Error SQL: $e");
+                    }
                     setState(() {
                       ListTiketPemesanan.add(ticket);
                     });

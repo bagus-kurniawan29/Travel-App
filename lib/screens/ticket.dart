@@ -141,9 +141,10 @@ class Ticket extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(
-                    builder: (context) => const MainScreen(),
-                  ));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MainScreen()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
@@ -170,6 +171,7 @@ class Ticket extends StatelessWidget {
       ),
     );
   }
+
   Widget _buildTicketRow(String label, String value, IconData icon) {
     return Row(
       children: [

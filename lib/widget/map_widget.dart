@@ -6,63 +6,21 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class MapWidget extends StatefulWidget {
-  const MapWidget({super.key});
+  // Tambahkan parameter isDark agar peta sinkron dengan tema aplikasi
+  final bool isDark; 
+  const MapWidget({super.key, required this.isDark});
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
 }
 
 class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
-  // Lokasi default (Contoh: Monas)
-  LatLng _currentPosition = const LatLng(-6.175392, 106.827153);
-  // Lokasi Tujuan (Contoh: Gunung Rinjani / Sesuaikan dengan tujuan app Anda)
+  LatLng _currentPosition = const LatLng(-8.6433, 116.4554); 
   final LatLng _destination = const LatLng(-8.4113, 116.4573);
 
   List<LatLng> _routePoints = [];
   final MapController _mapController = MapController();
   bool _isLoading = true;
-  void _moveToCurrentLocation() async {
-    await _determinePosition();
-    _mapController.move(_currentPosition, 13.0);
-    _animatedMapMove(_currentPosition, 13.0);
-  }
-
-  void _animatedMapMove(LatLng destLocation, double destZoom) {
-    final latTween = Tween<double>(
-      begin: _mapController.camera.center.latitude,
-      end: destLocation.latitude,
-    );
-    final lngTween = Tween<double>(
-      begin: _mapController.camera.center.longitude,
-      end: destLocation.longitude,
-    );
-    final zoomTween = Tween<double>(
-      begin: _mapController.camera.zoom,
-      end: destZoom,
-    );
-    final controller = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
-    final Animation<double> animation = CurvedAnimation(
-      parent: controller,
-      curve: Curves.fastOutSlowIn,
-    );
-    controller.addListener(() {
-      _mapController.move(
-        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
-        zoomTween.evaluate(animation),
-      );
-    });
-    animation.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        controller.dispose();
-      } else if (status == AnimationStatus.dismissed) {
-        controller.dispose();
-      }
-    });
-    controller.forward();
-  }
 
   @override
   void initState() {
@@ -79,26 +37,28 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
     try {
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
-        setState(() => _isLoading = false);
+        if (mounted) setState(() => _isLoading = false);
         return;
       }
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          setState(() => _isLoading = false);
+          if (mounted) setState(() => _isLoading = false);
           return;
         }
       }
+      
       Position position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
-          accuracy: LocationAccuracy.medium,
+          accuracy: LocationAccuracy.high,
         ),
       );
 
       if (mounted) {
         setState(() {
           _currentPosition = LatLng(position.latitude, position.longitude);
+          _mapController.move(_currentPosition, 13.0);
         });
       }
     } catch (e) {
@@ -150,19 +110,11 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
             ),
             children: [
               TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                // Gunakan Tile Layer gelap jika isDark aktif
+                urlTemplate: widget.isDark 
+                    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                    : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.travel_app',
-              ),
-              Positioned(
-                bottom: 10,
-                right: 10,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    _moveToCurrentLocation();
-                  },
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.my_location, color: Colors.blue),
-                ),
               ),
               PolylineLayer(
                 polylines: [
@@ -179,32 +131,41 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
                     point: _currentPosition,
                     width: 40,
                     height: 40,
-                    child: const Icon(
-                      Icons.my_location,
-                      color: Colors.blue,
-                      size: 40,
-                    ),
+                    child: const Icon(Icons.my_location, color: Colors.blue, size: 35),
                   ),
                   Marker(
                     point: _destination,
                     width: 40,
                     height: 40,
-                    child: const Icon(
-                      Icons.location_on,
-                      color: Colors.red,
-                      size: 40,
-                    ),
+                    child: const Icon(Icons.location_on, color: Colors.red, size: 35),
                   ),
                 ],
               ),
             ],
           ),
+          
+          // Tombol lokasi diletakkan di dalam Stack, bukan di dalam FlutterMap children
+          Positioned(
+            bottom: 10, // Naikkan sedikit agar tidak tertutup navbar
+            right: 10,
+            child: FloatingActionButton(
+              heroTag: "btn_gps", // Unik agar tidak error saat navigasi
+              onPressed: _determinePosition,
+              backgroundColor: widget.isDark ? Colors.grey[850] : Colors.white,
+              child: Icon(Icons.my_location, color: widget.isDark ? Colors.white : Colors.blue),
+            ),
+          ),
+
           if (_isLoading)
-            const Center(
+            Center(
               child: Card(
+                color: widget.isDark ? Colors.grey : Colors.white,
                 child: Padding(
-                  padding: EdgeInsets.all(12.0),
-                  child: Text("Memuat Rute..."),
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    "Mencari Lokasi & Rute...",
+                    style: TextStyle(color: widget.isDark ? Colors.white : Colors.black),
+                  ),
                 ),
               ),
             ),

@@ -12,19 +12,20 @@ class DatabaseHelper {
     return _database!;
   }
 
-Future<Database> _initDatabase() async {
-  String path = join(await getDatabasesPath(), 'travel_rinjani.db');
-  return await openDatabase(
-    path,
-    version: 1, 
-    onCreate: (db, version) {
-      // Pastikan SEMUA kolom tertulis di sini
-      return db.execute(
-        'CREATE TABLE tickets(id TEXT PRIMARY KEY, nama TEXT, noTelp TEXT, jumlah INTEGER, pemandu TEXT, total TEXT, tanggalPemesanan TEXT)',
-      );
-    },
-  );
-}
+  Future<Database> _initDatabase() async {
+    String path = join(await getDatabasesPath(), 'travel_rinjani.db');
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: (db, version) {
+        // Pastikan SEMUA kolom tertulis di sini
+        return db.execute(
+          'CREATE TABLE tickets(id TEXT PRIMARY KEY, nama TEXT, noTelp TEXT, jumlah INTEGER, pemandu TEXT, total TEXT, tanggalPemesanan TEXT)',
+        );
+      },
+    );
+  }
+
   Future<int> insertTicket(Map<String, dynamic> row) async {
     Database db = await database;
     return await db.insert('tickets', row);

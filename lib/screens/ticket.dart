@@ -1,48 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:travel_app/screens/booking.dart';
-import 'package:travel_app/screens/main_screen.dart';
 
 class Ticket extends StatelessWidget {
   final TicketData ticket;
-  const Ticket({super.key, required this.ticket});
+  final bool isDark; // Variabel harus final
+
+  const Ticket({super.key, required this.ticket, required this.isDark});
 
   @override
   Widget build(BuildContext context) {
+    // Definisi warna berdasarkan isDark
+    final Color cardColor = isDark ? Colors.grey[850]! : Colors.white;
+    final Color textColor = isDark ? Colors.white : Colors.black87;
+    final Color subTextColor = isDark ? Colors.white70 : Colors.grey;
+
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      // PENTING: Gunakan 'isDark', bukan 'widget.isDark' karena ini StatelessWidget
+      backgroundColor: isDark ? Colors.grey[900] : Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        // Menyesuaikan AppBar dengan tema
+        backgroundColor: isDark ? Colors.grey[900] : Colors.white,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
+        iconTheme: IconThemeData(color: textColor),
+        title: Text("Tiket Pesanan", style: TextStyle(color: textColor)),
       ),
       body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+        child: SingleChildScrollView(
+          // Tambahkan ini agar tidak overflow di layar kecil
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Container(
+              decoration: BoxDecoration(
+                color: cardColor, // Warna kartu mengikuti mode
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(isDark ? 0.3 : 0.05),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(color: Colors.blue),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Header Biru (Tetap biru karena ini aksen tiket)
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: const BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16),
+                      ),
+                    ),
+                    child: Column(
                       children: [
                         const Text(
                           "BOOKING ID",
-                          textAlign: TextAlign.center,
                           style: TextStyle(color: Colors.white70, fontSize: 10),
                         ),
                         Text(
@@ -50,135 +66,157 @@ class Ticket extends StatelessWidget {
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
-                            fontSize: 20,
+                            fontSize: 22,
+                            letterSpacing: 2,
                           ),
                         ),
                       ],
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    _buildTicketRow(
-                      "Nama Pemesan",
-                      ticket.nama,
-                      Icons.person_outline,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTicketRow(
-                      "Nomor WhatsApp",
-                      ticket.noTelp,
-                      Icons.phone_android,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTicketRow(
-                      "Jumlah Pengunjung",
-                      "${ticket.jumlah} Orang",
-                      Icons.groups_outlined,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTicketRow(
-                      "Pemandu Wisata",
-                      ticket.pemandu == "Ya"
-                          ? "Dengan Pemandu"
-                          : "Tanpa Pemandu",
-                      Icons.tour_outlined,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildTicketRow(
-                      "Tanggal Booking",
-                      "${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}",
-                      Icons.calendar_today,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: Divider(thickness: 1, height: 1),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
                       children: [
-                        const Text(
-                          "Total Bayar",
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                        _buildTicketRow(
+                          "Nama Pemesan",
+                          ticket.nama,
+                          Icons.person_outline,
+                          isDark,
                         ),
-                        Text(
-                          "Rp ${ticket.total}",
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
+                        const SizedBox(height: 16),
+                        _buildTicketRow(
+                          "Nomor WhatsApp",
+                          ticket.noTelp,
+                          Icons.phone_android,
+                          isDark,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTicketRow(
+                          "Jumlah Pengunjung",
+                          "${ticket.jumlah} Orang",
+                          Icons.groups_outlined,
+                          isDark,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTicketRow(
+                          "Pemandu Wisata",
+                          ticket.pemandu == "iya"
+                              ? "Dengan Pemandu"
+                              : "Tanpa Pemandu",
+                          Icons.tour_outlined,
+                          isDark,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTicketRow(
+                          "Tanggal Booking",
+                          "${ticket.tanggalPemesanan.day}/${ticket.tanggalPemesanan.month}/${ticket.tanggalPemesanan.year}",
+                          Icons.calendar_today,
+                          isDark,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: Divider(
+                            color: isDark ? Colors.grey[700] : Colors.grey[300],
+                            thickness: 1,
                           ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Total Bayar",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: subTextColor,
+                              ),
+                            ),
+                            Text(
+                              "Rp ${ticket.total}",
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.blue,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 30),
+                        // QR Code Container
+                        Container(
+                          height: 80,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: isDark ? Colors.grey[800] : Colors.grey[100],
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            Icons.qr_code_2,
+                            size: 60,
+                            color: isDark ? Colors.white70 : Colors.black54,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          "Tunjukkan tiket ini saat kedatangan",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 10, color: subTextColor),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 30),
-                    Container(
-                      height: 60,
+                  ),
+                  // Tombol Kembali
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      bottom: 20,
+                      left: 24,
+                      right: 24,
+                    ),
+                    child: SizedBox(
                       width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.qr_code_2,
-                          size: 40,
-                          color: Colors.black54,
+                      child: ElevatedButton(
+                        onPressed:
+                            () => Navigator.pop(
+                              context,
+                            ), // Cukup Pop saja agar tidak menumpuk stack
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: const Text(
+                          "Kembali Ke Beranda",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      textAlign: TextAlign.center,
-                      "Tunjukkan tiket ini saat kedatangan \n bisa di Screenshoot atau tunjukkan secara langsung",
-                      style: TextStyle(fontSize: 10, color: Colors.grey),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const MainScreen()),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 50,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  "Kembali Ke Beranda",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-            ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildTicketRow(String label, String value, IconData icon) {
+  // Helper Row yang mendukung Dark Mode
+  Widget _buildTicketRow(
+    String label,
+    String value,
+    IconData icon,
+    bool isDark,
+  ) {
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: Colors.blue[50],
+            color: Colors.blue.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: Colors.blue, size: 20),
@@ -189,11 +227,15 @@ class Ticket extends StatelessWidget {
           children: [
             Text(
               label,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: const TextStyle(color: Colors.grey, fontSize: 11),
             ),
             Text(
               value,
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+                color: isDark ? Colors.white : Colors.black87,
+              ),
             ),
           ],
         ),

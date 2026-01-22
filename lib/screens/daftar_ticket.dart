@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/screens/booking.dart'; // Import agar listTiketPemesanan terbaca
+import 'package:travel_app/screens/booking.dart';
 import 'package:travel_app/screens/ticket.dart';
 import 'package:travel_app/database/database.dart';
 
 class DaftarTicket extends StatefulWidget {
-  const DaftarTicket({super.key});
+  const DaftarTicket({super.key, required this.isDark});
+  final bool isDark;
 
   @override
   State<DaftarTicket> createState() => _DaftarTicketState();
@@ -13,16 +14,23 @@ class DaftarTicket extends StatefulWidget {
 class _DaftarTicketState extends State<DaftarTicket> {
   @override
   Widget build(BuildContext context) {
+    // Definisi warna berdasarkan isDark agar kode lebih bersih
+    final bool isDark = widget.isDark;
+    final Color textColor = isDark ? Colors.white : Colors.black;
+    final Color subTextColor = isDark ? Colors.white70 : Colors.black54;
+    final Color cardColor = isDark ? Colors.grey[850]! : Colors.white;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: isDark ? Colors.grey[900] : Colors.grey[100],
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        // Sesuaikan AppBar dengan mode tema
+        backgroundColor: isDark ? Colors.black : Colors.white,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
-        title: const Text(
+        iconTheme: IconThemeData(color: textColor),
+        title: Text(
           "Daftar Ticket",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
         ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
@@ -33,11 +41,21 @@ class _DaftarTicketState extends State<DaftarTicket> {
           }
 
           if (snapshot.hasError) {
-            return Center(child: Text("Error: ${snapshot.error}"));
+            return Center(
+              child: Text(
+                "Error: ${snapshot.error}",
+                style: TextStyle(color: textColor),
+              ),
+            );
           }
 
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text("Belum ada tiket yang dipesan"));
+            return Center(
+              child: Text(
+                "Belum ada tiket yang dipesan",
+                style: TextStyle(color: subTextColor),
+              ),
+            );
           }
 
           final daftarTiketSql = snapshot.data!;
@@ -47,12 +65,10 @@ class _DaftarTicketState extends State<DaftarTicket> {
             itemCount: daftarTiketSql.length,
             itemBuilder: (context, index) {
               final item = daftarTiketSql[index];
-
-              // Menggunakan method factory yang kamu buat
               final data = TicketData.ticketdatabase(item);
 
               return Card(
-                color: Colors.white,
+                color: cardColor, // Warna kartu mengikuti mode
                 elevation: 3,
                 margin: const EdgeInsets.only(bottom: 12),
                 shape: RoundedRectangleBorder(
@@ -66,17 +82,28 @@ class _DaftarTicketState extends State<DaftarTicket> {
                   ),
                   title: Text(
                     data.nama,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: textColor, // Warna teks judul
+                    ),
                   ),
                   subtitle: Text(
                     "ID: ${data.id}\n${data.jumlah} Orang • IDR ${data.total}\n${data.tanggalPemesanan.toLocal().toString().split(' ')[0]}",
+                    style: TextStyle(
+                      color: subTextColor,
+                    ), // Warna teks subtitle
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: subTextColor,
+                  ),
                   onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => Ticket(ticket: data),
+                        // Kirim juga parameter isDark ke halaman detail Ticket
+                        builder: (_) => Ticket(ticket: data, isDark: isDark),
                       ),
                     );
                   },

@@ -5,6 +5,7 @@ import 'package:travel_app/screens/booking.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+
 Future<Map<String, dynamic>> getWeatherData(
   double latitude,
   double longitude,
@@ -25,7 +26,8 @@ Future<Map<String, dynamic>> getWeatherData(
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.isDark});
+  final bool isDark;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -46,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen>
     'assets/img/rinjani 5.jpg',
   ];
 
+// Gunakan widget ini untuk mengganti Text biasa
   @override
   void initState() {
     super.initState();
@@ -65,7 +68,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+     backgroundColor: widget.isDark ? Colors.grey[900] : Colors.grey[100],
       body: Stack(
         children: [
           CustomScrollView(
@@ -135,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen>
                             child: Text(
                               "Open Trip",
                               style: TextStyle(
-                                color: Colors.blue[800],
+                              color:widget.isDark? Colors.blue : Colors.blue[800],
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -294,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen>
                       SizedBox(
                         height: 300,
                         width: double.infinity,
-                        child: const MapWidget(),
+                        child: MapWidget(isDark: widget.isDark),
                       ),
 
                       const SizedBox(height: 20),
@@ -311,9 +314,9 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                           ),
                           const SizedBox(height: 10),
-                          const Card(
-                            shadowColor: Color(0xFFE0E0E0),
-                            color: Colors.white,
+                          Card(
+                            color: widget.isDark ? Colors.grey[850] : Colors.white,
+                            shadowColor: widget.isDark ? Colors.black54 : const Color(0xFFE0E0E0),
                             margin: EdgeInsets.symmetric(vertical: 8),
                             child: ListTile(
                               leading: CircleAvatar(
@@ -322,16 +325,18 @@ class _HomeScreenState extends State<HomeScreen>
                               ),
                               title: Text(
                                 "Andi Pratama",
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  ),
                               ),
                               subtitle: Text(
                                 "Pendakian yang menantang namun sangat memuaskan! Pemandangan dari puncak luar biasa.",
                               ),
                             ),
                           ),
-                          const Card(
-                            shadowColor: Color(0xFFE0E0E0),
-                            color: Colors.white,
+                          Card(
+                            color: widget.isDark ? Colors.grey[850] : Colors.white,
+                            shadowColor: widget.isDark ? Colors.black54 : const Color(0xFFE0E0E0),
                             margin: EdgeInsets.symmetric(vertical: 8),
                             child: ListTile(
                               leading: CircleAvatar(
@@ -362,7 +367,7 @@ class _HomeScreenState extends State<HomeScreen>
               margin: const EdgeInsets.fromLTRB(0, 20, 0, 50),
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: widget.isDark ? Colors.grey[850] : Colors.white,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
@@ -391,7 +396,7 @@ class _HomeScreenState extends State<HomeScreen>
                         Text(
                           "IDR 150K",
                           style: TextStyle(
-                            color: Colors.blue[800],
+                            color:widget.isDark? Colors.blue : Colors.blue[800],
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -403,7 +408,7 @@ class _HomeScreenState extends State<HomeScreen>
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Booking()),
+                        MaterialPageRoute(builder: (context) => Booking(isDark: widget.isDark)),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -492,7 +497,10 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildInfoItem(IconData icon, String value, String label) {
     return Column(
       children: [
-        Icon(icon, color: Colors.blue[800], size: 24),
+        Icon(icon, 
+        color:widget.isDark? Colors.blue : Colors.blue[800],
+        size: 24
+        ),
         const SizedBox(height: 4),
         Text(
           value,

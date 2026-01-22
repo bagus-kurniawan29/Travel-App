@@ -3,6 +3,7 @@ import 'package:travel_app/screens/ticket.dart';
 import 'dart:math';
 import 'package:travel_app/database/database.dart';
 
+
 class TicketData {
   final String id;
   final String nama;
@@ -21,7 +22,8 @@ class TicketData {
     required this.total,
     required this.tanggalPemesanan,
   });
-  Map<String, dynamic> databaseticket () {
+
+  Map<String, dynamic> databaseticket() {
     return {
       'id': id,
       'nama': nama,
@@ -32,24 +34,26 @@ class TicketData {
       'tanggalPemesanan': tanggalPemesanan.toIso8601String(),
     };
   }
+
   factory TicketData.ticketdatabase(Map<String, dynamic> map) {
-  return TicketData(
-    id: map['id'],
-    nama: map['nama'],
-    noTelp: map['noTelp'],
-    jumlah: map['jumlah'],
-    pemandu: map['pemandu'],
-    total: map['total'],
-    tanggalPemesanan: DateTime.parse(map['tanggalPemesanan']),
-  );
-}
+    return TicketData(
+      id: map['id'],
+      nama: map['nama'],
+      noTelp: map['noTelp'],
+      jumlah: map['jumlah'],
+      pemandu: map['pemandu'],
+      total: map['total'],
+      tanggalPemesanan: DateTime.parse(map['tanggalPemesanan']),
+    );
+  }
 }
 
-// ignore: non_constant_identifier_names
 List<TicketData> ListTiketPemesanan = [];
 
 class Booking extends StatefulWidget {
-  const Booking({super.key});
+  
+  final bool isDark;
+  const Booking({super.key, required this.isDark});
 
   @override
   State<Booking> createState() => _BookingState();
@@ -57,17 +61,17 @@ class Booking extends StatefulWidget {
 
 class _BookingState extends State<Booking> {
   bool guide = false;
-  int price = 150000;
   int baseprice = 150000;
   int regularPrice = 200000;
   int count = 1;
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+
   int calculateTotal() {
     int priceWithGuide = guide ? baseprice + 50000 : baseprice;
     return priceWithGuide * count;
   }
-
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
 
   String generateId() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789';
@@ -79,17 +83,23 @@ class _BookingState extends State<Booking> {
 
   @override
   Widget build(BuildContext context) {
+    
+    final bool isDark = widget.isDark;
+    final Color textColor = isDark ? Colors.white : Colors.black;
+    final Color subTextColor = isDark ? Colors.white70 : Colors.grey[600]!;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      
+      backgroundColor: isDark ? Colors.grey[900] : Colors.white,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(top: 50.0, left: 10),
         child: FloatingActionButton(
           mini: true,
-          backgroundColor: Colors.white,
+          backgroundColor: isDark ? Colors.grey[800] : Colors.white,
           elevation: 2,
           onPressed: () => Navigator.pop(context),
-          child: const Icon(Icons.arrow_back, color: Colors.black),
+          child: Icon(Icons.arrow_back, color: textColor),
         ),
       ),
       body: SafeArea(
@@ -99,8 +109,8 @@ class _BookingState extends State<Booking> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 100),
-                Text(
+                const SizedBox(height: 105),
+                const Text(
                   "Isi Data Pemesan",
                   style: TextStyle(
                     fontSize: 24,
@@ -111,59 +121,45 @@ class _BookingState extends State<Booking> {
                 const SizedBox(height: 10),
                 Text(
                   "Pastikan data yang Anda isi valid agar kami dapat menghubungi Anda.",
-                  style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  style: TextStyle(color: subTextColor, fontSize: 14),
                 ),
                 const SizedBox(height: 40),
                 Form(
                   child: Column(
                     children: [
+                      
                       TextFormField(
                         controller: nameController,
-                        decoration: InputDecoration(
-                          labelText: "Nama Lengkap",
-                          prefixIcon: const Icon(Icons.person_outline),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(color: Colors.blue),
-                          ),
+                        style: TextStyle(color: textColor),
+                        decoration: _inputStyle(
+                          "Nama Lengkap",
+                          Icons.person_outline,
+                          isDark,
                         ),
                       ),
                       const SizedBox(height: 20),
+                      
                       TextFormField(
                         controller: phoneController,
+                        style: TextStyle(color: textColor),
                         keyboardType: TextInputType.phone,
-                        decoration: InputDecoration(
-                          labelText: "Nomor WhatsApp / Telepon",
-                          prefixIcon: const Icon(Icons.phone_android),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: const BorderSide(color: Colors.blue),
-                          ),
+                        decoration: _inputStyle(
+                          "Nomor WhatsApp / Telepon",
+                          Icons.phone_android,
+                          isDark,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 25),
+                      
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'Jumlah Pengunjung',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
+                              color: textColor,
                             ),
                           ),
                           Container(
@@ -174,17 +170,15 @@ class _BookingState extends State<Booking> {
                             child: Row(
                               children: [
                                 IconButton(
-                                  onPressed: () {
-                                    if (count > 1) {
-                                      setState(() {
-                                        count--;
-                                      });
-                                    }
-                                  },
-                                  icon: const Icon(Icons.remove_circle_outline),
-                                  color: Colors.blue,
+                                  onPressed:
+                                      () => setState(() {
+                                        if (count > 1) count--;
+                                      }),
+                                  icon: const Icon(
+                                    Icons.remove_circle_outline,
+                                    color: Colors.blue,
+                                  ),
                                 ),
-                                SizedBox(width: 8),
                                 Text(
                                   count.toString(),
                                   style: const TextStyle(
@@ -193,177 +187,88 @@ class _BookingState extends State<Booking> {
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                SizedBox(width: 8),
                                 IconButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      count++;
-                                    });
-                                  },
-                                  icon: Icon(Icons.add_circle_outline),
-                                  color: Colors.blue,
+                                  onPressed:
+                                      () => setState(() {
+                                        count++;
+                                      }),
+                                  icon: const Icon(
+                                    Icons.add_circle_outline,
+                                    color: Colors.blue,
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      Column(
+                      const SizedBox(height: 25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: Size(100, 100),
-                                  backgroundColor:
-                                      !guide
-                                          ? Colors.blueAccent
-                                          : Colors.grey[300],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    guide = false;
-                                    price = baseprice;
-                                  });
-                                },
-
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.person,
-                                      color:
-                                          !guide ? Colors.white : Colors.black,
-                                      size: 25,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      "Tanpa Pemandu",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color:
-                                            !guide
-                                                ? Colors.white
-                                                : Colors.black,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  setState(() {
-                                    guide = true;
-                                    price = regularPrice;
-                                  });
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: Size(100, 100),
-                                  backgroundColor:
-                                      guide
-                                          ? Colors.blueAccent
-                                          : Colors.grey[300],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
-                                  ),
-                                ),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.flag,
-                                      color:
-                                          guide ? Colors.white : Colors.black,
-                                      size: 25,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      "Dengan Pemandu",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color:
-                                            guide ? Colors.white : Colors.black,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          _guideButton(
+                            false,
+                            "Tanpa Pemandu",
+                            Icons.person,
+                            isDark,
                           ),
-                          const SizedBox(height: 40),
-                          Divider(color: Colors.grey[300], thickness: 1),
-                          const SizedBox(height: 7),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text("Pengunjung:"),
-                              Text(
-                                "+${baseprice * count}".replaceAllMapped(
-                                  RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                                  (Match m) => '${m[1]}.',
-                                ),
-                                style: const TextStyle(color: Colors.black),
-                              ),
-                            ],
+                          _guideButton(
+                            true,
+                            "Dengan Pemandu",
+                            Icons.flag,
+                            isDark,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                guide
-                                    ? "Pemandu wisata:"
-                                    : "tanpa Pemandu Wisata:",
-                                style: TextStyle(color: Colors.grey[800]),
-                              ),
-                              Text(
-                                guide ? "+50.000" : "0",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                            ],
+                        ],
+                      ),
+                      const SizedBox(height: 40),
+                      Divider(
+                        color: isDark ? Colors.grey[700] : Colors.grey[300],
+                        thickness: 1,
+                      ),
+                      const SizedBox(height: 15),
+                      
+                      _priceRow(
+                        "Pengunjung:",
+                        "+${baseprice * count}",
+                        subTextColor,
+                      ),
+                      _priceRow(
+                        guide ? "Pemandu wisata:" : "Tanpa Pemandu:",
+                        guide ? "+50.000" : "0",
+                        subTextColor,
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Total Harga:",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
                           ),
-                          const SizedBox(height: 5),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                "Total Harga:",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                "Rp ${calculateTotal().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            "Rp ${calculateTotal().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}",
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
                           ),
                         ],
                       ),
                     ],
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 40),
+                
                 ElevatedButton(
                   onPressed: () async {
                     if (nameController.text.isEmpty ||
                         phoneController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Harap isi semua data pemesan"),
-                        ),
-                      );
+                      _showSnackBar("Harap isi semua data pemesan");
                       return;
                     }
                     final ticket = TicketData(
@@ -372,37 +277,28 @@ class _BookingState extends State<Booking> {
                       noTelp: phoneController.text,
                       jumlah: count,
                       pemandu: guide ? "iya" : "tidak",
-                      total: calculateTotal().toString().replaceAllMapped(
-                        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-                        (Match m) => '${m[1]}.',
-                      ),
+                      total: calculateTotal().toString(),
                       tanggalPemesanan: DateTime.now(),
                     );
                     try {
-                      await DatabaseHelper().insertTicket(ticket.databaseticket());
+                      await DatabaseHelper().insertTicket(
+                        ticket.databaseticket(),
+                      );
                       if (mounted) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => Ticket(ticket: ticket),
+                            builder:
+                                (_) => Ticket(ticket: ticket, isDark: isDark),
                           ),
                         );
                       }
                     } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text("Gagal menyimpan ke database: $e"),
-                        ),
-                      );
-                      print("Detail Error SQL: $e");
+                      _showSnackBar("Gagal simpan database: $e");
                     }
-                    setState(() {
-                      ListTiketPemesanan.add(ticket);
-                    });
                   },
-
                   style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 50),
+                    minimumSize: const Size(double.infinity, 55),
                     backgroundColor: Colors.blue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
@@ -412,16 +308,96 @@ class _BookingState extends State<Booking> {
                     "Pesan Sekarang",
                     style: TextStyle(
                       fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                 ),
+                const SizedBox(height: 30),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  
+
+  InputDecoration _inputStyle(String label, IconData icon, bool isDark) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: TextStyle(color: isDark ? Colors.white70 : Colors.grey),
+      prefixIcon: Icon(icon, color: isDark ? Colors.blue : Colors.grey),
+      filled: true,
+      fillColor: isDark ? Colors.grey[850] : Colors.white,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: BorderSide(
+          color: isDark ? Colors.grey[700]! : Colors.grey.shade300,
+        ),
+      ),
+    );
+  }
+
+  Widget _guideButton(bool isActive, String label, IconData icon, bool isDark) {
+    bool selected = guide == isActive;
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        fixedSize: const Size(140, 100),
+        backgroundColor:
+            selected
+                ? Colors.blueAccent
+                : (isDark ? Colors.grey[800] : Colors.grey[200]),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+      onPressed: () => setState(() => guide = isActive),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color:
+                selected
+                    ? Colors.white
+                    : (isDark ? Colors.white70 : Colors.black),
+            size: 28,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              color:
+                  selected
+                      ? Colors.white
+                      : (isDark ? Colors.white70 : Colors.black),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _priceRow(String label, String value, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: TextStyle(color: color)),
+          Text(
+            value,
+            style: TextStyle(color: color, fontWeight: FontWeight.w500),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSnackBar(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
   }
 }

@@ -7,7 +7,7 @@ import 'dart:convert';
 
 class MapWidget extends StatefulWidget {
   // Tambahkan parameter isDark agar peta sinkron dengan tema aplikasi
-  final bool isDark; 
+  final bool isDark;
   const MapWidget({super.key, required this.isDark});
 
   @override
@@ -15,7 +15,7 @@ class MapWidget extends StatefulWidget {
 }
 
 class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
-  LatLng _currentPosition = const LatLng(-8.6433, 116.4554); 
+  LatLng _currentPosition = const LatLng(-8.6433, 116.4554);
   final LatLng _destination = const LatLng(-8.4113, 116.4573);
 
   List<LatLng> _routePoints = [];
@@ -48,7 +48,7 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
           return;
         }
       }
-      
+
       Position position = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
@@ -111,9 +111,10 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
             children: [
               TileLayer(
                 // Gunakan Tile Layer gelap jika isDark aktif
-                urlTemplate: widget.isDark 
-                    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-                    : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                urlTemplate:
+                    widget.isDark
+                        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                        : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
                 userAgentPackageName: 'com.example.travel_app',
               ),
               PolylineLayer(
@@ -131,19 +132,27 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
                     point: _currentPosition,
                     width: 40,
                     height: 40,
-                    child: const Icon(Icons.my_location, color: Colors.blue, size: 35),
+                    child: const Icon(
+                      Icons.my_location,
+                      color: Colors.blue,
+                      size: 35,
+                    ),
                   ),
                   Marker(
                     point: _destination,
                     width: 40,
                     height: 40,
-                    child: const Icon(Icons.location_on, color: Colors.red, size: 35),
+                    child: const Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                      size: 35,
+                    ),
                   ),
                 ],
               ),
             ],
           ),
-          
+
           // Tombol lokasi diletakkan di dalam Stack, bukan di dalam FlutterMap children
           Positioned(
             bottom: 10, // Naikkan sedikit agar tidak tertutup navbar
@@ -152,7 +161,10 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
               heroTag: "btn_gps", // Unik agar tidak error saat navigasi
               onPressed: _determinePosition,
               backgroundColor: widget.isDark ? Colors.grey[850] : Colors.white,
-              child: Icon(Icons.my_location, color: widget.isDark ? Colors.white : Colors.blue),
+              child: Icon(
+                Icons.my_location,
+                color: widget.isDark ? Colors.white : Colors.blue,
+              ),
             ),
           ),
 
@@ -164,7 +176,9 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
                     "Mencari Lokasi & Rute...",
-                    style: TextStyle(color: widget.isDark ? Colors.white : Colors.black),
+                    style: TextStyle(
+                      color: widget.isDark ? Colors.white : Colors.black,
+                    ),
                   ),
                 ),
               ),

@@ -1,0 +1,21 @@
+{
+  "@@locale": "ko",
+  "gunungRinjani": "린자니 산",
+  "openTrip": "오픈 트립",
+  "height": "높이",
+  "heightValue": "해발 3726m",
+  "temp": "온도",
+  "weather": "날씨",
+  "route": "경로",
+  "routeValue": "세나루",
+  "aboutDestination": "목적지 정보",
+  "description": "세나루를 통한 린자니 산 트레킹은 분화구 가장자리에서 세가라 아낙 호수의 전경을 감상할 수 있는 최고의 코스입니다. 울창한 열대 우림을 통과합니다.",
+  "gallery": "갤러리",
+  "gallerySub": "소중한 순간을 기록하세요",
+  "locationAndRoute": "위치 및 경로",
+  "locationSub": "현재 위치에서 세나루 베이스캠프까지의 자동 경로 안내.",
+  "reviews": "여행자 후기",
+  "startFrom": "최저 가격",
+  "price": "IDR 150K",
+  "booking": "예약하기"
+}

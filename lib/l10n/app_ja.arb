@@ -1,0 +1,22 @@
+
+{
+  "@@locale": "ja",
+  "gunungRinjani": "リンジャニ山",
+  "openTrip": "オープン・トリップ",
+  "height": "高さ",
+  "heightValue": "3726メートル",
+  "temp": "温度",
+  "weather": "天気",
+  "route": "ルート",
+  "routeValue": "セナル",
+  "aboutDestination": "目的地について",
+  "description": "セナル経由のリンジャニ山登山は、クレーターの縁からセガラ・アナク湖の景色を楽しむための人気のルートです。このルートは緑豊かな熱帯雨林を通過します。",
+  "gallery": "ギャラリー",
+  "gallerySub": "あなたの大切な瞬間を記録しましょう",
+  "locationAndRoute": "場所とルート",
+  "locationSub": "現在地からセナルベースキャンプまでの自動ルート。",
+  "reviews": "この目的地についての口コミ",
+  "startFrom": "料金",
+  "price": "15万ルピア",
+  "booking": "予約する"
+}

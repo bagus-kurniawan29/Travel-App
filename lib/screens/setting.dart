@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:travel_app/l10n/app_localizations.dart'; // Import ARB
 
 class Settings extends StatefulWidget {
   final bool isDark;
-  final String currentLang; // Tambahkan ini
+  final String currentLang; 
   final Function(bool) onToggle;
-  final Function(String) onLangChange; // Tambahkan ini
+  final Function(String) onLangChange; 
 
   const Settings({
     super.key,
     required this.isDark,
-    required this.currentLang, // Wajib diisi
+    required this.currentLang,
     required this.onToggle,
-    required this.onLangChange, // Wajib diisi
+    required this.onLangChange,
   });
 
   @override
@@ -19,53 +20,28 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  // Gunakan Value/ID yang sesuai dengan kode bahasa (Locale)
   final List<Map<String, dynamic>> languages = [
-    {'name': 'Indonesia', 'native': 'Indonesia', 'flag': '🇮🇩'},
-    {'name': 'English', 'native': 'English', 'flag': '🇺🇸'},
-    {'name': 'Japan', 'native': '日本語', 'flag': '🇯🇵'},
-    {'name': 'Chinese', 'native': '中文', 'flag': '🇨🇳'},
+    {'id': 'id', 'native': 'Indonesia', 'flag': '🇮🇩'},
+    {'id': 'en', 'native': 'English', 'flag': '🇺🇸'},
+    {'id': 'ja', 'native': '日本語', 'flag': '🇯🇵'},
+    {'id': 'zh', 'native': '中文', 'flag': '🇨🇳'},
+    {'id': 'ko', 'native': '한국어', 'flag': '🇰🇷'},
+    {'id': 'de', 'native': 'Deutsch', 'flag': '🇩🇪'},
   ];
-
-  // Kamus terjemahan
-  final Map<String, Map<String, String>> translation = {
-    'Indonesia': {
-      'setting_title': 'Pengaturan',
-      'dark_mode': 'Mode Gelap',
-      'language': 'Bahasa',
-      'app_setting': 'PENGATURAN APLIKASI',
-    },
-    'English': {
-      'setting_title': 'Settings',
-      'dark_mode': 'Dark Mode',
-      'language': 'Language',
-      'app_setting': 'APP SETTINGS',
-    },
-    'Japan': {
-      'setting_title': '設定',
-      'dark_mode': 'ダークモード',
-      'language': '言語',
-      'app_setting': 'アプリ設定',
-    },
-    'Chinese': {
-      'setting_title': '设置',
-      'dark_mode': '深色模式',
-      'language': '语言',
-      'app_setting': '应用设置',
-    },
-  };
 
   @override
   Widget build(BuildContext context) {
     final bool isDark = widget.isDark;
-    // Ambil bahasa yang aktif saat ini dari widget induk (MainScreen/MyApp)
-    final String currentLang = widget.currentLang;
+    // 1. Inisialisasi lokalisasi ARB
+    var i = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: isDark ? Colors.grey[900] : Colors.grey[100],
       appBar: AppBar(
-        // Teks judul AppBar otomatis berubah sesuai bahasa
+        // 2. Gunakan t.aboutDestination atau tambahkan 'settings' di ARB Anda
         title: Text(
-          translation[currentLang]?['setting_title'] ?? 'Settings',
+          "Settings", // Jika di ARB ada 'settings', gunakan t.settings
           style: TextStyle(color: isDark ? Colors.white : Colors.black),
         ),
         backgroundColor: isDark ? Colors.black : Colors.white,
@@ -93,7 +69,7 @@ class _SettingsState extends State<Settings> {
               child: Column(
                 children: [
                   Text(
-                    translation[currentLang]?['app_setting'] ?? 'APP SETTINGS',
+                    "APP SETTINGS", // Gunakan t.appSettings jika ada di ARB
                     style: TextStyle(
                       fontSize: 14,
                       letterSpacing: 1.2,
@@ -114,14 +90,7 @@ class _SettingsState extends State<Settings> {
                             color: isDark ? Colors.white : Colors.black,
                           ),
                           const SizedBox(width: 20),
-                          Text(
-                            translation[currentLang]?['dark_mode'] ?? 'Dark Mode',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: isDark ? Colors.white : Colors.black,
-                            ),
-                          ),
+                          const Text("Dark Mode"), // Bisa diganti t.darkMode
                         ],
                       ),
                       Switch(
@@ -139,44 +108,30 @@ class _SettingsState extends State<Settings> {
                     children: [
                       Row(
                         children: [
-                          Icon(
-                            Icons.language,
-                            color: isDark ? Colors.white : Colors.black,
-                          ),
+                          Icon(Icons.language, color: isDark ? Colors.white : Colors.black),
                           const SizedBox(width: 20),
-                          Text(
-                            translation[currentLang]?['language'] ?? 'Language',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: isDark ? Colors.white : Colors.black,
-                            ),
-                          ),
+                          const Text("Language"), // Bisa diganti t.language
                         ],
                       ),
                       DropdownButton<String>(
-                        // Gunakan currentLang agar Dropdown sinkron dengan pilihan global
-                        value: currentLang, 
+                        value: widget.currentLang, // ID bahasa dari main.dart
                         underline: const SizedBox(),
                         dropdownColor: isDark ? Colors.grey[850] : Colors.white,
                         onChanged: (String? newValue) {
                           if (newValue != null) {
-                            // Panggil fungsi ganti bahasa global
-                            widget.onLangChange(newValue); 
+                            widget.onLangChange(newValue);
                           }
                         },
                         items: languages.map<DropdownMenuItem<String>>((lang) {
                           return DropdownMenuItem<String>(
-                            value: lang['name'],
+                            value: lang['id'], // Gunakan 'id' (id, en, ja, dll)
                             child: Row(
                               children: [
                                 Text(lang['flag'], style: const TextStyle(fontSize: 18)),
                                 const SizedBox(width: 10),
                                 Text(
                                   lang['native'],
-                                  style: TextStyle(
-                                    color: isDark ? Colors.white : Colors.black,
-                                  ),
+                                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
                                 ),
                               ],
                             ),

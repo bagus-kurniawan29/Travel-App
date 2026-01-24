@@ -1,0 +1,21 @@
+{
+  "@@locale": "de",
+  "gunungRinjani": "Berg Rinjani",
+  "openTrip": "Offene Tour",
+  "height": "Höhe",
+  "heightValue": "3726 m ü. M.",
+  "temp": "Temp",
+  "weather": "Wetter",
+  "route": "Route",
+  "routeValue": "Senaru",
+  "aboutDestination": "Über das Ziel",
+  "description": "Die Besteigung des Berges Rinjani über Senaru ist die beliebteste Route, um den Blick auf den Segara Anak See vom Kraterrand aus zu genießen. Der Weg führt durch dichten tropischen Regenwald.",
+  "gallery": "Galerie",
+  "gallerySub": "Halten Sie Ihre kostbaren Momente fest",
+  "locationAndRoute": "Standort & Route",
+  "locationSub": "Automatische Route von Ihrem Standort zum Senaru Basecamp.",
+  "reviews": "Bewertungen",
+  "startFrom": "Ab",
+  "price": "150K IDR",
+  "booking": "Buchen"
+}

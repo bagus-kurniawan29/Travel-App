@@ -1,0 +1,21 @@
+{
+  "@@locale": "zh",
+  "gunungRinjani": "林贾尼火山",
+  "openTrip": "公开团",
+  "height": "高度",
+  "heightValue": "海拔3726米",
+  "temp": "温度",
+  "weather": "天气",
+  "route": "路线",
+  "routeValue": "塞纳鲁",
+  "aboutDestination": "关于目的地",
+  "description": "经由塞纳鲁登顶林贾尼火山是欣赏火山口边缘塞加拉阿纳克湖美景的最佳路线。这条路径穿过茂密的热带雨林。",
+  "gallery": "精彩瞬间",
+  "gallerySub": "捕捉并珍藏您的宝贵时刻",
+  "locationAndRoute": "地点与路线",
+  "locationSub": "从您当前位置到塞纳鲁大本营的自动路线。",
+  "reviews": "游客点评",
+  "startFrom": "价格起",
+  "price": "15万印尼盾",
+  "booking": "立即预订"
+}

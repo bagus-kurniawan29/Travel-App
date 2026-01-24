@@ -1,0 +1,21 @@
+{
+  "@@locale": "id",
+  "gunungRinjani": "Gunung Rinjani",
+  "openTrip": "Open Trip",
+  "height": "Tinggi",
+  "heightValue": "3726 mdpl",
+  "temp": "Suhu",
+  "weather": "Cuaca",
+  "route": "Jalur",
+  "routeValue": "Senaru",
+  "aboutDestination": "Tentang Destinasi",
+  "description": "Pendakian Gunung Rinjani via Senaru adalah rute favorit untuk menikmati pemandangan Danau Segara Anak dari bibir kawah. Jalur ini melewati hutan hujan tropis yang lebat.",
+  "gallery": "Galeri Momen",
+  "gallerySub": "Tangkap dan abadikan momen berharga Anda",
+  "locationAndRoute": "Lokasi & Rute",
+  "locationSub": "Rute otomatis dari lokasi Anda menuju Basecamp Senaru.",
+  "reviews": "Apa yang orang bilang tentang destinasi ini?",
+  "startFrom": "Mulai dari",
+  "price": "IDR 150K",
+  "booking": "Booking"
+}

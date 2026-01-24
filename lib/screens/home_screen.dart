@@ -4,21 +4,22 @@ import '../widget/map_widget.dart';
 import 'package:travel_app/screens/booking.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'package:travel_app/l10n/app_localizations.dart'; 
 
 Future<Map<String, dynamic>> getWeatherData(
   double latitude,
   double longitude,
+  String langCode, 
 ) async {
   const String apiKey = '28140c530dc329414ae0eca71573b566';
+  
   final String url =
-      'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey&units=metric&lang=id';
+      'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey&units=metric&lang=$langCode';
   final response = await http.get(Uri.parse(url));
 
   if (response.statusCode == 200) {
     return json.decode(response.body);
   } else {
-    // Tambahkan print ini untuk melihat alasan gagal di console
     print("Status Code: ${response.statusCode}");
     print("Response Body: ${response.body}");
     throw Exception('Failed to load weather data');
@@ -48,11 +49,9 @@ class _HomeScreenState extends State<HomeScreen>
     'assets/img/rinjani 5.jpg',
   ];
 
-// Gunakan widget ini untuk mengganti Text biasa
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 20),
@@ -67,8 +66,13 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    
+    final t = AppLocalizations.of(context)!;
+    
+    final String currentLangCode = Localizations.localeOf(context).languageCode;
+
     return Scaffold(
-     backgroundColor: widget.isDark ? Colors.grey[900] : Colors.grey[100],
+      backgroundColor: widget.isDark ? Colors.grey[900] : Colors.grey[100],
       body: Stack(
         children: [
           CustomScrollView(
@@ -79,9 +83,9 @@ class _HomeScreenState extends State<HomeScreen>
                 pinned: true,
                 backgroundColor: Colors.blue[800],
                 flexibleSpace: FlexibleSpaceBar(
-                  title: const Text(
-                    "Gunung Rinjani",
-                    style: TextStyle(
+                  title: Text(
+                    t.gunungRinjani, 
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -136,9 +140,11 @@ class _HomeScreenState extends State<HomeScreen>
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              "Open Trip",
+                              t.openTrip, 
                               style: TextStyle(
-                              color:widget.isDark? Colors.blue : Colors.blue[800],
+                                color: widget.isDark
+                                    ? Colors.blue
+                                    : Colors.blue[800],
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -161,86 +167,75 @@ class _HomeScreenState extends State<HomeScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildInfoItem(Icons.terrain, "3726 mdpl", "Tinggi"),
+                          _buildInfoItem(Icons.terrain, t.heightValue, t.height), 
                           FutureBuilder<Map<String, dynamic>>(
-                            future: getWeatherData(-8.41, 116.45),
+                            
+                            future: getWeatherData(-8.41, 116.45, currentLangCode),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 var data = snapshot.data!;
                                 int temp = data['main']['temp'].toInt();
                                 String condition = data['weather'][0]['main'];
+                                
                                 String desc = data['weather'][0]['description'];
+                                
                                 IconData weatherIcon = Icons.wb_sunny;
                                 if (condition == "Clear") {
                                   weatherIcon = Icons.wb_sunny;
-                                  desc = "Cerah";
                                 } else if (condition == "Clouds") {
                                   weatherIcon = Icons.wb_cloudy;
-                                  desc = "Berawan";
                                 } else if (condition == "Rain") {
                                   weatherIcon = Icons.umbrella;
-                                  desc = "Hujan";
                                 } else {
                                   weatherIcon = Icons.cloud;
-                                  desc = "Berawan";
                                 }
                                 return Row(
                                   children: [
                                     _buildInfoItem(
                                       Icons.thermostat,
                                       "$temp°C",
-                                      "Suhu",
+                                      t.temp, 
                                     ),
-                                    SizedBox(width: 40),
-                                    _buildInfoItem(weatherIcon, desc, "Cuaca"),
+                                    const SizedBox(width: 40),
+                                    _buildInfoItem(weatherIcon, desc, t.weather), 
                                   ],
                                 );
                               } else if (snapshot.hasError) {
-                                return Text(
-                                  "${snapshot.error}",
-                                  style: TextStyle(
-                                    fontSize: 8,
-                                    color: Colors.red,
-                                  ),
-                                );
+                                return const Text("Error", style: TextStyle(fontSize: 8, color: Colors.red));
                               }
-                              return const Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              );
+                              return const CircularProgressIndicator(strokeWidth: 2);
                             },
                           ),
-                          _buildInfoItem(Icons.map, "Senaru", "Jalur"),
+                          _buildInfoItem(Icons.map, t.routeValue, t.route), 
                         ],
                       ),
 
                       const SizedBox(height: 24),
 
-                      const Text(
-                        "Tentang Destinasi",
-                        style: TextStyle(
+                      Text(
+                        t.aboutDestination, 
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        "Pendakian Gunung Rinjani via Senaru adalah rute favorit untuk menikmati pemandangan Danau Segara Anak dari bibir kawah. Jalur ini melewati hutan hujan tropis yang lebat.",
+                        t.description, 
                         style: TextStyle(color: Colors.grey[600], height: 1.5),
                       ),
 
                       const SizedBox(height: 30),
 
-                      const Text(
-                        "Galeri Momen",
-                        style: TextStyle(
+                      Text(
+                        t.gallery, 
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        "tangkap dan abadikan moment berharga anda",
+                        t.gallerySub, 
                         style: TextStyle(color: Colors.grey[600], height: 1.5),
                       ),
                       const SizedBox(height: 20),
@@ -254,7 +249,7 @@ class _HomeScreenState extends State<HomeScreen>
                               alignment: Alignment.center,
                               children: [
                                 Container(
-                                  width: double.infinity,
+                                  width: 60,
                                   height: 60,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -277,23 +272,19 @@ class _HomeScreenState extends State<HomeScreen>
 
                       const SizedBox(height: 23),
 
-                      const Text(
-                        "Lokasi & Rute",
-                        style: TextStyle(
+                      Text(
+                        t.locationAndRoute, 
+                        style: const TextStyle(
                           fontSize: 21,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
                       const SizedBox(height: 8),
-
                       Text(
-                        "Rute otomatis dari lokasi Anda menuju Basecamp Senaru.",
+                        t.locationSub, 
                         style: TextStyle(color: Colors.grey[600], fontSize: 12),
                       ),
-
                       const SizedBox(height: 15),
-
                       SizedBox(
                         height: 300,
                         width: double.infinity,
@@ -306,52 +297,16 @@ class _HomeScreenState extends State<HomeScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 20),
-                          const Text(
-                            "Apa Yang orang bilang tentang destinasi ini?",
-                            style: TextStyle(
+                          Text(
+                            t.reviews, 
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 10),
-                          Card(
-                            color: widget.isDark ? Colors.grey[850] : Colors.white,
-                            shadowColor: widget.isDark ? Colors.black54 : const Color(0xFFE0E0E0),
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.blue,
-                                child: Icon(Icons.person, color: Colors.white),
-                              ),
-                              title: Text(
-                                "Andi Pratama",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  ),
-                              ),
-                              subtitle: Text(
-                                "Pendakian yang menantang namun sangat memuaskan! Pemandangan dari puncak luar biasa.",
-                              ),
-                            ),
-                          ),
-                          Card(
-                            color: widget.isDark ? Colors.grey[850] : Colors.white,
-                            shadowColor: widget.isDark ? Colors.black54 : const Color(0xFFE0E0E0),
-                            margin: EdgeInsets.symmetric(vertical: 8),
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                backgroundColor: Colors.blue,
-                                child: Icon(Icons.person, color: Colors.white),
-                              ),
-                              title: Text(
-                                "Bayu Prayoga",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              subtitle: Text(
-                                "Tim guide sangat profesional dan ramah. Sangat membantu selama pendakian.",
-                              ),
-                            ),
-                          ),
+                          _buildReviewCard("Andi Pratama", "Pendakian yang menantang namun sangat memuaskan!"),
+                          _buildReviewCard("Bayu Prayoga", "Tim guide sangat profesional dan ramah."),
                         ],
                       ),
                       const SizedBox(height: 40),
@@ -387,16 +342,16 @@ class _HomeScreenState extends State<HomeScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Mulai dari",
+                          t.startFrom, 
                           style: TextStyle(
                             color: Colors.grey[500],
                             fontSize: 12,
                           ),
                         ),
                         Text(
-                          "IDR 150K",
+                          t.price, 
                           style: TextStyle(
-                            color:widget.isDark? Colors.blue : Colors.blue[800],
+                            color: widget.isDark ? Colors.blue : Colors.blue[800],
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -408,7 +363,9 @@ class _HomeScreenState extends State<HomeScreen>
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Booking(isDark: widget.isDark)),
+                        MaterialPageRoute(
+                          builder: (context) => Booking(isDark: widget.isDark),
+                        ),
                       );
                     },
                     style: ElevatedButton.styleFrom(
@@ -421,9 +378,9 @@ class _HomeScreenState extends State<HomeScreen>
                         vertical: 14,
                       ),
                     ),
-                    child: const Text(
-                      "Booking",
-                      style: TextStyle(
+                    child: Text(
+                      t.booking, 
+                      style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
@@ -438,20 +395,34 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
+  
+  Widget _buildReviewCard(String name, String comment) {
+    return Card(
+      color: widget.isDark ? Colors.grey[850] : Colors.white,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        leading: const CircleAvatar(
+          backgroundColor: Colors.blue,
+          child: Icon(Icons.person, color: Colors.white),
+        ),
+        title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(comment),
+      ),
+    );
+  }
+
+  
   List<Widget> _buildOrbitingGalleryItems(BuildContext context) {
     final List<Widget> items = [];
     final int count = _galleryImages.length;
-
     final double screenWidth = MediaQuery.of(context).size.width;
     final double radius = screenWidth * 0.35;
 
     for (int i = 0; i < count; i++) {
       final double baseAngle = (2 * math.pi * i) / count;
       final double currentAngle = baseAngle + (_controller.value * 2 * math.pi);
-
       final double x = radius * math.cos(currentAngle);
       final double y = (radius * 0.6) * math.sin(currentAngle);
-
       final double scale = 0.6 + (math.sin(currentAngle) + 1) * 0.2;
 
       items.add(
@@ -460,31 +431,16 @@ class _HomeScreenState extends State<HomeScreen>
           child: Transform.scale(
             scale: scale,
             child: Container(
-              width: 80,
-              height: 80,
+              width: 80, height: 80,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(0, 4))],
                 border: Border.all(color: Colors.white, width: 2),
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  _galleryImages[i],
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Center(
-                      child: Icon(Icons.broken_image, color: Colors.grey),
-                    );
-                  },
-                ),
+                child: Image.asset(_galleryImages[i], fit: BoxFit.cover),
               ),
             ),
           ),
@@ -497,17 +453,9 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildInfoItem(IconData icon, String value, String label) {
     return Column(
       children: [
-        Icon(icon, 
-        color:widget.isDark? Colors.blue : Colors.blue[800],
-        size: 24
-        ),
+        Icon(icon, color: widget.isDark ? Colors.blue : Colors.blue[800], size: 24),
         const SizedBox(height: 4),
-        Text(
-          value,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-        ),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10)),
       ],
     );

@@ -3,7 +3,6 @@ import 'package:travel_app/screens/ticket.dart';
 import 'dart:math';
 import 'package:travel_app/database/database.dart';
 
-
 class TicketData {
   final String id;
   final String nama;
@@ -51,7 +50,6 @@ class TicketData {
 List<TicketData> ListTiketPemesanan = [];
 
 class Booking extends StatefulWidget {
-  
   final bool isDark;
   const Booking({super.key, required this.isDark});
 
@@ -83,13 +81,11 @@ class _BookingState extends State<Booking> {
 
   @override
   Widget build(BuildContext context) {
-    
     final bool isDark = widget.isDark;
     final Color textColor = isDark ? Colors.white : Colors.black;
     final Color subTextColor = isDark ? Colors.white70 : Colors.grey[600]!;
 
     return Scaffold(
-      
       backgroundColor: isDark ? Colors.grey[900] : Colors.white,
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Padding(
@@ -127,7 +123,6 @@ class _BookingState extends State<Booking> {
                 Form(
                   child: Column(
                     children: [
-                      
                       TextFormField(
                         controller: nameController,
                         style: TextStyle(color: textColor),
@@ -138,7 +133,7 @@ class _BookingState extends State<Booking> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      
+
                       TextFormField(
                         controller: phoneController,
                         style: TextStyle(color: textColor),
@@ -150,7 +145,7 @@ class _BookingState extends State<Booking> {
                         ),
                       ),
                       const SizedBox(height: 25),
-                      
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -226,7 +221,7 @@ class _BookingState extends State<Booking> {
                         thickness: 1,
                       ),
                       const SizedBox(height: 15),
-                      
+
                       _priceRow(
                         "Pengunjung:",
                         "+${baseprice * count}",
@@ -263,7 +258,7 @@ class _BookingState extends State<Booking> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                
+
                 ElevatedButton(
                   onPressed: () async {
                     if (nameController.text.isEmpty ||
@@ -321,8 +316,6 @@ class _BookingState extends State<Booking> {
       ),
     );
   }
-
-  
 
   InputDecoration _inputStyle(String label, IconData icon, bool isDark) {
     return InputDecoration(

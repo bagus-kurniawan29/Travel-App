@@ -6,16 +6,16 @@ import '../widget/navbar.dart';
 
 class MainScreen extends StatefulWidget {
   final bool isDark;
-  final String currentLang; // Tambahkan ini
+  final String currentLang;
   final Function(bool) onToggle;
-  final Function(String) onLangChange; // Tambahkan ini
+  final Function(String) onLangChange;
 
   const MainScreen({
-    super.key, 
-    required this.isDark, 
-    required this.currentLang, 
-    required this.onToggle, 
-    required this.onLangChange
+    super.key,
+    required this.isDark,
+    required this.currentLang,
+    required this.onToggle,
+    required this.onLangChange,
   });
 
   @override
@@ -25,19 +25,33 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
+  String getLanguageCode(String languageName) {
+    switch (languageName) {
+      case 'English':
+        return 'en';
+      case 'Japan':
+        return 'ja';
+      case 'Chinese':
+        return 'zh-cn';
+      default:
+        return 'id';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final List<Widget> _pages = [
-      HomeScreen(isDark: widget.isDark),
+      HomeScreen(
+        isDark: widget.isDark,
+      ),
       DaftarTicket(isDark: widget.isDark),
       Settings(
-        isDark: widget.isDark, 
+        isDark: widget.isDark,
         onToggle: widget.onToggle,
-        currentLang: widget.currentLang, // Oper ke Settings
-        onLangChange: widget.onLangChange, // Oper fungsi ke Settings
+        currentLang: widget.currentLang,
+        onLangChange: widget.onLangChange,
       ),
     ];
-
     return Scaffold(
       extendBody: true,
       body: IndexedStack(index: _selectedIndex, children: _pages),

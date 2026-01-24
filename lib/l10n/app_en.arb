@@ -1,0 +1,21 @@
+{
+  "@@locale": "en",
+  "gunungRinjani": "Mount Rinjani",
+  "openTrip": "Open Trip",
+  "height": "Height",
+  "heightValue": "3726 masl",
+  "temp": "Temp",
+  "weather": "Weather",
+  "route": "Route",
+  "routeValue": "Senaru",
+  "aboutDestination": "About Destination",
+  "description": "Mount Rinjani trekking via Senaru is a favorite route to enjoy the view of Lake Segara Anak from the crater rim. This path passes through dense tropical rainforests.",
+  "gallery": "Moment Gallery",
+  "gallerySub": "Capture and immortalize your precious moments",
+  "locationAndRoute": "Location & Route",
+  "locationSub": "Automatic route from your location to Senaru Basecamp.",
+  "reviews": "What people say about this destination",
+  "startFrom": "Starts from",
+  "price": "IDR 150K",
+  "booking": "Book Now"
+}

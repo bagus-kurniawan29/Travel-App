@@ -9,6 +9,15 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
+  String get appSetting => 'Pengaturan Aplikasi';
+
+  @override
+  String get darkmode => 'Mode Gelap';
+
+  @override
+  String get language => 'Bahasa';
+
+  @override
   String get gunungRinjani => 'Gunung Rinjani';
 
   @override
@@ -25,6 +34,18 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get weather => 'Cuaca';
+
+  @override
+  String get sunny => 'Cerah';
+
+  @override
+  String get cloudy => 'Berawan';
+
+  @override
+  String get rain => 'Hujan';
+
+  @override
+  String get clear => 'Bersih';
 
   @override
   String get route => 'Jalur';
@@ -63,4 +84,44 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get booking => 'Booking';
+
+  @override
+  String get addData => 'Isi Data Pemesanan';
+
+  @override
+  String get addDesc =>
+      'Pastikan data yang anda isi valid agar kami dapat menghubungi anda';
+
+  @override
+  String get name => 'Nama Lengkap';
+
+  @override
+  String get phoneNumber => 'Nomor Telepon';
+
+  @override
+  String get numberVisitor => 'Jumlah Pengunjung';
+
+  @override
+  String get withoutGuide => 'Tanpa Pemandu';
+
+  @override
+  String get withGuide => 'Dengan Pemandu';
+
+  @override
+  String get visitors => 'Pengunjung:';
+
+  @override
+  String get bill => 'Total Harga:';
+
+  @override
+  String get bookNow => 'Pesan Sekarang';
+
+  @override
+  String get showTicket => 'Tunjukkan tiket ini saat kedatangan';
+
+  @override
+  String get backHome => 'Kembali Ke Beranda';
+
+  @override
+  String get noTicket => 'Belum ada tiket yang dipesan';
 }

@@ -2,10 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:travel_app/screens/booking.dart';
 import 'package:travel_app/screens/ticket.dart';
 import 'package:travel_app/database/database.dart';
+import 'package:travel_app/l10n/app_localizations.dart';
 
 class DaftarTicket extends StatefulWidget {
-  const DaftarTicket({super.key, required this.isDark});
+  // 1. Constructor harus nerima semua callback buat dioper ke halaman Ticket nanti
+  const DaftarTicket({
+    super.key, 
+    required this.isDark, 
+    required this.onToggle, 
+    required this.onLangChange
+  });
+
   final bool isDark;
+  final Function(bool) onToggle;
+  final Function(String) onLangChange;
 
   @override
   State<DaftarTicket> createState() => _DaftarTicketState();
@@ -14,7 +24,7 @@ class DaftarTicket extends StatefulWidget {
 class _DaftarTicketState extends State<DaftarTicket> {
   @override
   Widget build(BuildContext context) {
-    // Definisi warna berdasarkan isDark agar kode lebih bersih
+    var t = AppLocalizations.of(context)!;
     final bool isDark = widget.isDark;
     final Color textColor = isDark ? Colors.white : Colors.black;
     final Color subTextColor = isDark ? Colors.white70 : Colors.black54;
@@ -23,13 +33,12 @@ class _DaftarTicketState extends State<DaftarTicket> {
     return Scaffold(
       backgroundColor: isDark ? Colors.grey[900] : Colors.grey[100],
       appBar: AppBar(
-        // Sesuaikan AppBar dengan mode tema
         backgroundColor: isDark ? Colors.black : Colors.white,
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: textColor),
         title: Text(
-          "Daftar Ticket",
+          "Daftar Ticket", // Lo bisa ganti pake t.ticketList kalau ada di l10n
           style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
         ),
       ),
@@ -51,10 +60,7 @@ class _DaftarTicketState extends State<DaftarTicket> {
 
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
-              child: Text(
-                "Belum ada tiket yang dipesan",
-                style: TextStyle(color: subTextColor),
-              ),
+              child: Text(t.noTicket, style: TextStyle(color: subTextColor)),
             );
           }
 
@@ -68,7 +74,7 @@ class _DaftarTicketState extends State<DaftarTicket> {
               final data = TicketData.ticketdatabase(item);
 
               return Card(
-                color: cardColor, // Warna kartu mengikuti mode
+                color: cardColor,
                 elevation: 3,
                 margin: const EdgeInsets.only(bottom: 12),
                 shape: RoundedRectangleBorder(
@@ -84,14 +90,12 @@ class _DaftarTicketState extends State<DaftarTicket> {
                     data.nama,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: textColor, // Warna teks judul
+                      color: textColor,
                     ),
                   ),
                   subtitle: Text(
                     "ID: ${data.id}\n${data.jumlah} Orang • IDR ${data.total}\n${data.tanggalPemesanan.toLocal().toString().split(' ')[0]}",
-                    style: TextStyle(
-                      color: subTextColor,
-                    ), // Warna teks subtitle
+                    style: TextStyle(color: subTextColor),
                   ),
                   trailing: Icon(
                     Icons.arrow_forward_ios,
@@ -99,11 +103,17 @@ class _DaftarTicketState extends State<DaftarTicket> {
                     color: subTextColor,
                   ),
                   onTap: () {
+                    // 2. FIX: Kirim SEMUA parameter (ticket, isDark, onToggle, onLangChange)
+                    // ke constructor Ticket biar navigasi baliknya nggak error
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        // Kirim juga parameter isDark ke halaman detail Ticket
-                        builder: (_) => Ticket(ticket: data, isDark: isDark),
+                        builder: (_) => Ticket(
+                          ticket: data, 
+                          isDark: isDark, 
+                          onToggle: widget.onToggle, 
+                          onLangChange: widget.onLangChange,
+                        ),
                       ),
                     );
                   },

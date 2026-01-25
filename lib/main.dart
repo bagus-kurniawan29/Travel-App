@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart'; // Tambahkan ini
-import 'package:travel_app/l10n/app_localizations.dart'; // Tambahkan ini
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:travel_app/l10n/app_localizations.dart';
 import 'package:travel_app/widget/iphone14_frame.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'screens/main_screen.dart';
@@ -27,9 +27,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isDark = false;
-  
-  // Ubah dari String ke Locale
-  Locale _currentLocale = const Locale('id'); 
+
+  Locale _currentLocale = const Locale('id');
 
   void toggleTheme(bool value) {
     setState(() {
@@ -37,7 +36,6 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
-  // Fungsi untuk mengubah bahasa secara global
   void toggleLanguage(String langCode) {
     setState(() {
       _currentLocale = Locale(langCode);
@@ -50,27 +48,32 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Travel App',
 
-      // Konfigurasi Lokalisasi Utama
       locale: _currentLocale,
       localizationsDelegates: const [
-        AppLocalizations.delegate, // Dari file generate arb
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
       supportedLocales: const [
-        Locale('id'), // Indonesia
-        Locale('en'), // English
-        Locale('ja'), // Jepang
-        Locale('zh'), // China
-        Locale('ko'), // Korea
-        Locale('de'), // Jerman/Eropa
+        Locale('id'),
+        Locale('en'),
+        Locale('ja'),
+        Locale('zh'),
+        Locale('ko'),
+        Locale('de'),
+        Locale('ar'),
       ],
 
       theme: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.grey[100],
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor: Colors.blue,
+          cursorColor: Colors.blue,
+          selectionHandleColor: Colors.blue,
+        ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
@@ -81,8 +84,7 @@ class _MyAppState extends State<MyApp> {
       home: MainScreen(
         isDark: _isDark,
         onToggle: toggleTheme,
-        // Kirim kode bahasa saat ini ke MainScreen
-        currentLang: _currentLocale.languageCode, 
+        currentLang: _currentLocale.languageCode,
         onLangChange: toggleLanguage,
       ),
 

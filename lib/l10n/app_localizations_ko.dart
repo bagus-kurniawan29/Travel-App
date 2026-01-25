@@ -9,6 +9,15 @@ class AppLocalizationsKo extends AppLocalizations {
   AppLocalizationsKo([String locale = 'ko']) : super(locale);
 
   @override
+  String get appSetting => '앱 설정';
+
+  @override
+  String get darkmode => '다크 모드';
+
+  @override
+  String get language => '언어';
+
+  @override
   String get gunungRinjani => '린자니 산';
 
   @override
@@ -25,6 +34,18 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get weather => '날씨';
+
+  @override
+  String get sunny => '화창함';
+
+  @override
+  String get cloudy => '흐림';
+
+  @override
+  String get rain => '비';
+
+  @override
+  String get clear => '맑음';
 
   @override
   String get route => '경로';
@@ -62,4 +83,43 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get booking => '예약하기';
+
+  @override
+  String get addData => '예약 데이터 입력';
+
+  @override
+  String get addDesc => '귀하에게 연락할 수 있도록 입력한 데이터가 유효한지 확인하십시오';
+
+  @override
+  String get name => '성함';
+
+  @override
+  String get phoneNumber => '전화번호';
+
+  @override
+  String get numberVisitor => '방문자 수';
+
+  @override
+  String get withoutGuide => '가이드 없음';
+
+  @override
+  String get withGuide => '가이드 있음';
+
+  @override
+  String get visitors => '방문자:';
+
+  @override
+  String get bill => '총 가격:';
+
+  @override
+  String get bookNow => '지금 예약';
+
+  @override
+  String get showTicket => '도착 시 이 티켓을 제시해 주세요';
+
+  @override
+  String get backHome => '홈으로 돌아가기';
+
+  @override
+  String get noTicket => '예약된 티켓이 없습니다';
 }

@@ -9,6 +9,15 @@ class AppLocalizationsJa extends AppLocalizations {
   AppLocalizationsJa([String locale = 'ja']) : super(locale);
 
   @override
+  String get appSetting => 'アプリ設定';
+
+  @override
+  String get darkmode => 'ダークモード';
+
+  @override
+  String get language => '言語';
+
+  @override
   String get gunungRinjani => 'リンジャニ山';
 
   @override
@@ -25,6 +34,18 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get weather => '天気';
+
+  @override
+  String get sunny => '快晴';
+
+  @override
+  String get cloudy => '曇り';
+
+  @override
+  String get rain => '雨';
+
+  @override
+  String get clear => '晴れ';
 
   @override
   String get route => 'ルート';
@@ -62,4 +83,43 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get booking => '予約する';
+
+  @override
+  String get addData => '予約データを入力してください';
+
+  @override
+  String get addDesc => 'ご連絡できるよう、入力したデータが有効であることを確認してください';
+
+  @override
+  String get name => 'フルネーム';
+
+  @override
+  String get phoneNumber => '電話番号';
+
+  @override
+  String get numberVisitor => '来場者数';
+
+  @override
+  String get withoutGuide => 'ガイドなし';
+
+  @override
+  String get withGuide => 'ガイドあり';
+
+  @override
+  String get visitors => '来場者:';
+
+  @override
+  String get bill => '合計金額:';
+
+  @override
+  String get bookNow => '今すぐ予約';
+
+  @override
+  String get showTicket => '到着時にこのチケットを提示してください';
+
+  @override
+  String get backHome => 'ホームに戻る';
+
+  @override
+  String get noTicket => '予約されたチケットはまだありません';
 }

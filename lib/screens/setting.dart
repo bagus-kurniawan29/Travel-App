@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/l10n/app_localizations.dart'; // Import ARB
+import 'package:travel_app/l10n/app_localizations.dart';
 
 class Settings extends StatefulWidget {
   final bool isDark;
-  final String currentLang; 
+  final String currentLang;
   final Function(bool) onToggle;
-  final Function(String) onLangChange; 
+  final Function(String) onLangChange;
 
   const Settings({
     super.key,
@@ -20,28 +20,27 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  // Gunakan Value/ID yang sesuai dengan kode bahasa (Locale)
   final List<Map<String, dynamic>> languages = [
     {'id': 'id', 'native': 'Indonesia', 'flag': '🇮🇩'},
     {'id': 'en', 'native': 'English', 'flag': '🇺🇸'},
+    {'id': 'de', 'native': 'Deutsch', 'flag': '🇩🇪'},
+    {'id': 'ar', 'native': 'عربي', 'flag': '🇸🇦'},
     {'id': 'ja', 'native': '日本語', 'flag': '🇯🇵'},
     {'id': 'zh', 'native': '中文', 'flag': '🇨🇳'},
     {'id': 'ko', 'native': '한국어', 'flag': '🇰🇷'},
-    {'id': 'de', 'native': 'Deutsch', 'flag': '🇩🇪'},
   ];
 
   @override
   Widget build(BuildContext context) {
     final bool isDark = widget.isDark;
-    // 1. Inisialisasi lokalisasi ARB
-    var i = AppLocalizations.of(context)!;
+
+    var t = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: isDark ? Colors.grey[900] : Colors.grey[100],
       appBar: AppBar(
-        // 2. Gunakan t.aboutDestination atau tambahkan 'settings' di ARB Anda
         title: Text(
-          "Settings", // Jika di ARB ada 'settings', gunakan t.settings
+          "Settings",
           style: TextStyle(color: isDark ? Colors.white : Colors.black),
         ),
         backgroundColor: isDark ? Colors.black : Colors.white,
@@ -60,7 +59,10 @@ class _SettingsState extends State<Settings> {
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
-                    color: isDark ? Colors.black54 : Colors.black.withOpacity(0.05),
+                    color:
+                        isDark
+                            ? Colors.black54
+                            : Colors.black.withOpacity(0.05),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -69,7 +71,7 @@ class _SettingsState extends State<Settings> {
               child: Column(
                 children: [
                   Text(
-                    "APP SETTINGS", // Gunakan t.appSettings jika ada di ARB
+                    t.appSetting,
                     style: TextStyle(
                       fontSize: 14,
                       letterSpacing: 1.2,
@@ -79,7 +81,6 @@ class _SettingsState extends State<Settings> {
                   ),
                   const SizedBox(height: 25),
 
-                  // Row Dark Mode
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -90,7 +91,7 @@ class _SettingsState extends State<Settings> {
                             color: isDark ? Colors.white : Colors.black,
                           ),
                           const SizedBox(width: 20),
-                          const Text("Dark Mode"), // Bisa diganti t.darkMode
+                          Text(t.darkmode),
                         ],
                       ),
                       Switch(
@@ -102,19 +103,21 @@ class _SettingsState extends State<Settings> {
                   ),
                   const Divider(height: 30),
 
-                  // Row Bahasa
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.language, color: isDark ? Colors.white : Colors.black),
+                          Icon(
+                            Icons.language,
+                            color: isDark ? Colors.white : Colors.black,
+                          ),
                           const SizedBox(width: 20),
-                          const Text("Language"), // Bisa diganti t.language
+                          Text(t.language),
                         ],
                       ),
                       DropdownButton<String>(
-                        value: widget.currentLang, // ID bahasa dari main.dart
+                        value: widget.currentLang,
                         underline: const SizedBox(),
                         dropdownColor: isDark ? Colors.grey[850] : Colors.white,
                         onChanged: (String? newValue) {
@@ -122,21 +125,30 @@ class _SettingsState extends State<Settings> {
                             widget.onLangChange(newValue);
                           }
                         },
-                        items: languages.map<DropdownMenuItem<String>>((lang) {
-                          return DropdownMenuItem<String>(
-                            value: lang['id'], // Gunakan 'id' (id, en, ja, dll)
-                            child: Row(
-                              children: [
-                                Text(lang['flag'], style: const TextStyle(fontSize: 18)),
-                                const SizedBox(width: 10),
-                                Text(
-                                  lang['native'],
-                                  style: TextStyle(color: isDark ? Colors.white : Colors.black),
+                        items:
+                            languages.map<DropdownMenuItem<String>>((lang) {
+                              return DropdownMenuItem<String>(
+                                value: lang['id'],
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      lang['flag'],
+                                      style: const TextStyle(fontSize: 18),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Text(
+                                      lang['native'],
+                                      style: TextStyle(
+                                        color:
+                                            isDark
+                                                ? Colors.white
+                                                : Colors.black,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
+                              );
+                            }).toList(),
                       ),
                     ],
                   ),

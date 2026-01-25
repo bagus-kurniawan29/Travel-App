@@ -4,15 +4,15 @@ import '../widget/map_widget.dart';
 import 'package:travel_app/screens/booking.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:travel_app/l10n/app_localizations.dart'; 
+import 'package:travel_app/l10n/app_localizations.dart';
 
 Future<Map<String, dynamic>> getWeatherData(
   double latitude,
   double longitude,
-  String langCode, 
+  String langCode,
 ) async {
   const String apiKey = '28140c530dc329414ae0eca71573b566';
-  
+
   final String url =
       'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&appid=$apiKey&units=metric&lang=$langCode';
   final response = await http.get(Uri.parse(url));
@@ -27,8 +27,10 @@ Future<Map<String, dynamic>> getWeatherData(
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.isDark});
+  const HomeScreen({super.key, required this.isDark, required this.onToggle, required this.onLangChange});
   final bool isDark;
+  final Function(bool) onToggle;
+  final Function(String) onLangChange;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -66,9 +68,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    
     final t = AppLocalizations.of(context)!;
-    
+
     final String currentLangCode = Localizations.localeOf(context).languageCode;
 
     return Scaffold(
@@ -80,11 +81,10 @@ class _HomeScreenState extends State<HomeScreen>
               SliverAppBar(
                 expandedHeight: 320.0,
                 floating: false,
-                pinned: true,
                 backgroundColor: Colors.blue[800],
                 flexibleSpace: FlexibleSpaceBar(
                   title: Text(
-                    t.gunungRinjani, 
+                    t.gunungRinjani,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,
@@ -140,11 +140,12 @@ class _HomeScreenState extends State<HomeScreen>
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
-                              t.openTrip, 
+                              t.openTrip,
                               style: TextStyle(
-                                color: widget.isDark
-                                    ? Colors.blue
-                                    : Colors.blue[800],
+                                color:
+                                    widget.isDark
+                                        ? Colors.blue
+                                        : Colors.blue[800],
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -167,26 +168,37 @@ class _HomeScreenState extends State<HomeScreen>
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          _buildInfoItem(Icons.terrain, t.heightValue, t.height), 
+                          _buildInfoItem(
+                            Icons.terrain,
+                            t.heightValue,
+                            t.height,
+                          ),
                           FutureBuilder<Map<String, dynamic>>(
-                            
-                            future: getWeatherData(-8.41, 116.45, currentLangCode),
+                            future: getWeatherData(
+                              -8.41,
+                              116.45,
+                              currentLangCode,
+                            ),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 var data = snapshot.data!;
                                 int temp = data['main']['temp'].toInt();
                                 String condition = data['weather'][0]['main'];
-                                
+
                                 String desc = data['weather'][0]['description'];
-                                
+
                                 IconData weatherIcon = Icons.wb_sunny;
                                 if (condition == "Clear") {
+                                  desc = t.clear;
                                   weatherIcon = Icons.wb_sunny;
                                 } else if (condition == "Clouds") {
+                                  desc = t.cloudy;
                                   weatherIcon = Icons.wb_cloudy;
                                 } else if (condition == "Rain") {
+                                  desc = t.rain;
                                   weatherIcon = Icons.umbrella;
                                 } else {
+                                  desc = t.cloudy;
                                   weatherIcon = Icons.cloud;
                                 }
                                 return Row(
@@ -194,26 +206,38 @@ class _HomeScreenState extends State<HomeScreen>
                                     _buildInfoItem(
                                       Icons.thermostat,
                                       "$temp°C",
-                                      t.temp, 
+                                      t.temp,
                                     ),
                                     const SizedBox(width: 40),
-                                    _buildInfoItem(weatherIcon, desc, t.weather), 
+                                    _buildInfoItem(
+                                      weatherIcon,
+                                      desc,
+                                      t.weather,
+                                    ),
                                   ],
                                 );
                               } else if (snapshot.hasError) {
-                                return const Text("Error", style: TextStyle(fontSize: 8, color: Colors.red));
+                                return const Text(
+                                  "Error",
+                                  style: TextStyle(
+                                    fontSize: 8,
+                                    color: Colors.red,
+                                  ),
+                                );
                               }
-                              return const CircularProgressIndicator(strokeWidth: 2);
+                              return const CircularProgressIndicator(
+                                strokeWidth: 2,
+                              );
                             },
                           ),
-                          _buildInfoItem(Icons.map, t.routeValue, t.route), 
+                          _buildInfoItem(Icons.map, t.routeValue, t.route),
                         ],
                       ),
 
                       const SizedBox(height: 24),
 
                       Text(
-                        t.aboutDestination, 
+                        t.aboutDestination,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -221,21 +245,21 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        t.description, 
+                        t.description,
                         style: TextStyle(color: Colors.grey[600], height: 1.5),
                       ),
 
                       const SizedBox(height: 30),
 
                       Text(
-                        t.gallery, 
+                        t.gallery,
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        t.gallerySub, 
+                        t.gallerySub,
                         style: TextStyle(color: Colors.grey[600], height: 1.5),
                       ),
                       const SizedBox(height: 20),
@@ -273,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen>
                       const SizedBox(height: 23),
 
                       Text(
-                        t.locationAndRoute, 
+                        t.locationAndRoute,
                         style: const TextStyle(
                           fontSize: 21,
                           fontWeight: FontWeight.bold,
@@ -281,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        t.locationSub, 
+                        t.locationSub,
                         style: TextStyle(color: Colors.grey[600], fontSize: 12),
                       ),
                       const SizedBox(height: 15),
@@ -298,15 +322,48 @@ class _HomeScreenState extends State<HomeScreen>
                         children: [
                           const SizedBox(height: 20),
                           Text(
-                            t.reviews, 
+                            t.reviews,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           const SizedBox(height: 10),
-                          _buildReviewCard("Andi Pratama", "Pendakian yang menantang namun sangat memuaskan!"),
-                          _buildReviewCard("Bayu Prayoga", "Tim guide sangat profesional dan ramah."),
+                          _buildReviewCard(
+                            "Andi Pratama",
+                            "Suasana Hutan Vibes pendakian semuanya lengkap intinya mantap ditambah dipermudaj dengan aplikasi ini jaya terus rinjaniku",
+                            "🇮🇩",
+                          ),
+                          _buildReviewCard(
+                            "Maxil Antoni",
+                            "The Best experience i've ever see in my life",
+                            "🇺🇸",
+                          ),
+                          _buildReviewCard(
+                            "Hans Müller",
+                            "Eine herausfordernde Wanderung, aber die Aussicht war absolut fantastisch!",
+                            "🇩🇪",
+                          ),
+                          _buildReviewCard(
+                            "佐藤 健",
+                            "ガイドチームは非常にプロフェッショナルで、景色は最高でした！",
+                            "🇯🇵",
+                          ),
+                          _buildReviewCard(
+                            "أحمد منصور",
+                            "تجربة رائعة حقاً، المناظر من القمة لا تُصدق. أنصح الجميع بها.",
+                            "🇸🇦",
+                          ),
+                          _buildReviewCard(
+                            "김지훈",
+                            "정말 멋진 경험이었습니다! 정상에서 본 풍경은 평생 잊지 못할 거예요.",
+                            "🇰🇷",
+                          ),
+                          _buildReviewCard(
+                            "李伟",
+                            "景色非常迷人，导游也非常友好。这是我最难忘的一次旅行。",
+                            "🇨🇳",
+                          ),
                         ],
                       ),
                       const SizedBox(height: 40),
@@ -342,16 +399,17 @@ class _HomeScreenState extends State<HomeScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          t.startFrom, 
+                          t.startFrom,
                           style: TextStyle(
                             color: Colors.grey[500],
                             fontSize: 12,
                           ),
                         ),
                         Text(
-                          t.price, 
+                          t.price,
                           style: TextStyle(
-                            color: widget.isDark ? Colors.blue : Colors.blue[800],
+                            color:
+                                widget.isDark ? Colors.blue : Colors.blue[900],
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -364,7 +422,7 @@ class _HomeScreenState extends State<HomeScreen>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Booking(isDark: widget.isDark),
+                          builder: (context) => Booking(isDark: widget.isDark, onToggle: widget.onToggle, onLangChange: widget.onLangChange,),
                         ),
                       );
                     },
@@ -379,7 +437,7 @@ class _HomeScreenState extends State<HomeScreen>
                       ),
                     ),
                     child: Text(
-                      t.booking, 
+                      t.booking,
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -395,23 +453,37 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
-  
-  Widget _buildReviewCard(String name, String comment) {
+  Widget _buildReviewCard(String name, String comment, String flag) {
     return Card(
       color: widget.isDark ? Colors.grey[850] : Colors.white,
       margin: const EdgeInsets.symmetric(vertical: 8),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: Colors.blue,
-          child: Icon(Icons.person, color: Colors.white),
+        leading: Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.blue[100],
+              child: Icon(Icons.person, color: Colors.blue[800]),
+            ),
+            // Penempatan bendera di pojok bawah avatar
+            Container(
+              padding: const EdgeInsets.all(1),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: Text(flag, style: const TextStyle(fontSize: 12)),
+            ),
+          ],
         ),
         title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(comment),
+        subtitle: Text(comment, style: const TextStyle(fontSize: 13)),
       ),
     );
   }
 
-  
   List<Widget> _buildOrbitingGalleryItems(BuildContext context) {
     final List<Widget> items = [];
     final int count = _galleryImages.length;
@@ -431,11 +503,18 @@ class _HomeScreenState extends State<HomeScreen>
           child: Transform.scale(
             scale: scale,
             child: Container(
-              width: 80, height: 80,
+              width: 80,
+              height: 80,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 8, offset: Offset(0, 4))],
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 8,
+                    offset: Offset(0, 4),
+                  ),
+                ],
                 border: Border.all(color: Colors.white, width: 2),
               ),
               child: ClipRRect(
@@ -453,9 +532,16 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _buildInfoItem(IconData icon, String value, String label) {
     return Column(
       children: [
-        Icon(icon, color: widget.isDark ? Colors.blue : Colors.blue[800], size: 24),
+        Icon(
+          icon,
+          color: widget.isDark ? Colors.blue : Colors.blue[800],
+          size: 24,
+        ),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+        Text(
+          value,
+          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+        ),
         Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10)),
       ],
     );

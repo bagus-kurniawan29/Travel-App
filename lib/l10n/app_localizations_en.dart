@@ -9,6 +9,15 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get appSetting => 'App Settings';
+
+  @override
+  String get darkmode => 'Dark Mode';
+
+  @override
+  String get language => 'Language';
+
+  @override
   String get gunungRinjani => 'Mount Rinjani';
 
   @override
@@ -25,6 +34,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get weather => 'Weather';
+
+  @override
+  String get sunny => 'Sunny';
+
+  @override
+  String get cloudy => 'Cloudy';
+
+  @override
+  String get rain => 'Rain';
+
+  @override
+  String get clear => 'Clear';
 
   @override
   String get route => 'Route';
@@ -63,4 +84,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get booking => 'Book Now';
+
+  @override
+  String get addData => 'Fill in booking data';
+
+  @override
+  String get addDesc =>
+      'Ensure the data you fill in is valid so we can contact you';
+
+  @override
+  String get name => 'Full Name';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get numberVisitor => 'Number of Visitors';
+
+  @override
+  String get withoutGuide => 'Without Guide';
+
+  @override
+  String get withGuide => 'With Guide';
+
+  @override
+  String get visitors => 'Visitors:';
+
+  @override
+  String get bill => 'Total Price:';
+
+  @override
+  String get bookNow => 'Book Now';
+
+  @override
+  String get showTicket => 'Show this ticket upon arrival';
+
+  @override
+  String get backHome => 'Back to Home';
+
+  @override
+  String get noTicket => 'No tickets booked yet';
 }

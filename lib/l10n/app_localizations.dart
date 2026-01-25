@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'app_localizations_ar.dart';
 import 'app_localizations_de.dart';
 import 'app_localizations_en.dart';
 import 'app_localizations_id.dart';
@@ -98,6 +99,7 @@ abstract class AppLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('de'),
     Locale('en'),
     Locale('id'),
@@ -105,6 +107,24 @@ abstract class AppLocalizations {
     Locale('ko'),
     Locale('zh'),
   ];
+
+  /// No description provided for @appSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'App Settings'**
+  String get appSetting;
+
+  /// No description provided for @darkmode.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Mode'**
+  String get darkmode;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
 
   /// No description provided for @gunungRinjani.
   ///
@@ -141,6 +161,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Weather'**
   String get weather;
+
+  /// No description provided for @sunny.
+  ///
+  /// In en, this message translates to:
+  /// **'Sunny'**
+  String get sunny;
+
+  /// No description provided for @cloudy.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloudy'**
+  String get cloudy;
+
+  /// No description provided for @rain.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get rain;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
 
   /// No description provided for @route.
   ///
@@ -213,6 +257,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Book Now'**
   String get booking;
+
+  /// No description provided for @addData.
+  ///
+  /// In en, this message translates to:
+  /// **'Fill in booking data'**
+  String get addData;
+
+  /// No description provided for @addDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ensure the data you fill in is valid so we can contact you'**
+  String get addDesc;
+
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get name;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @numberVisitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Number of Visitors'**
+  String get numberVisitor;
+
+  /// No description provided for @withoutGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'Without Guide'**
+  String get withoutGuide;
+
+  /// No description provided for @withGuide.
+  ///
+  /// In en, this message translates to:
+  /// **'With Guide'**
+  String get withGuide;
+
+  /// No description provided for @visitors.
+  ///
+  /// In en, this message translates to:
+  /// **'Visitors:'**
+  String get visitors;
+
+  /// No description provided for @bill.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Price:'**
+  String get bill;
+
+  /// No description provided for @bookNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Now'**
+  String get bookNow;
+
+  /// No description provided for @showTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Show this ticket upon arrival'**
+  String get showTicket;
+
+  /// No description provided for @backHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Home'**
+  String get backHome;
+
+  /// No description provided for @noTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'No tickets booked yet'**
+  String get noTicket;
 }
 
 class _AppLocalizationsDelegate
@@ -226,6 +348,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
+    'ar',
     'de',
     'en',
     'id',
@@ -241,6 +364,8 @@ class _AppLocalizationsDelegate
 AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ar':
+      return AppLocalizationsAr();
     case 'de':
       return AppLocalizationsDe();
     case 'en':

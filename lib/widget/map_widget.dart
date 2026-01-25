@@ -163,7 +163,7 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
               backgroundColor: widget.isDark ? Colors.grey[850] : Colors.white,
               child: Icon(
                 Icons.my_location,
-                color: widget.isDark ? Colors.white : Colors.blue,
+                color: widget.isDark ? Colors.lightBlue : Colors.blue,
               ),
             ),
           ),

@@ -41,10 +41,8 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _pages = [
-      HomeScreen(
-        isDark: widget.isDark,
-      ),
-      DaftarTicket(isDark: widget.isDark),
+      HomeScreen(isDark: widget.isDark, onToggle: widget.onToggle, onLangChange: widget.onLangChange,),
+      DaftarTicket(isDark: widget.isDark, onToggle: widget.onToggle, onLangChange: widget.onLangChange),
       Settings(
         isDark: widget.isDark,
         onToggle: widget.onToggle,

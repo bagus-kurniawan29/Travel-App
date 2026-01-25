@@ -1,38 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:travel_app/screens/booking.dart';
+import 'package:travel_app/screens/main_screen.dart';
+import 'package:travel_app/l10n/app_localizations.dart';
 
 class Ticket extends StatelessWidget {
   final TicketData ticket;
-  final bool isDark; // Variabel harus final
+  final bool isDark;
+  
+  
+  final Function(bool) onToggle;
+  final Function(String) onLangChange;
 
-  const Ticket({super.key, required this.ticket, required this.isDark});
+  const Ticket({
+    super.key, 
+    required this.ticket, 
+    required this.isDark,
+    
+    required this.onToggle, 
+    required this.onLangChange,
+  });
 
   @override
   Widget build(BuildContext context) {
-    // Definisi warna berdasarkan isDark
+    var t = AppLocalizations.of(context)!;
     final Color cardColor = isDark ? Colors.grey[850]! : Colors.white;
     final Color textColor = isDark ? Colors.white : Colors.black87;
     final Color subTextColor = isDark ? Colors.white70 : Colors.grey;
 
     return Scaffold(
-      // PENTING: Gunakan 'isDark', bukan 'widget.isDark' karena ini StatelessWidget
       backgroundColor: isDark ? Colors.grey[900] : Colors.grey[100],
       appBar: AppBar(
-        // Menyesuaikan AppBar dengan tema
         backgroundColor: isDark ? Colors.grey[900] : Colors.white,
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: textColor),
-        title: Text("Tiket Pesanan", style: TextStyle(color: textColor)),
+        title: Text("Order Ticket", style: TextStyle(color: textColor)),
       ),
       body: Center(
         child: SingleChildScrollView(
-          // Tambahkan ini agar tidak overflow di layar kecil
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Container(
               decoration: BoxDecoration(
-                color: cardColor, // Warna kartu mengikuti mode
+                color: cardColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
@@ -45,7 +55,6 @@ class Ticket extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Header Biru (Tetap biru karena ini aksen tiket)
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(20),
@@ -78,31 +87,29 @@ class Ticket extends StatelessWidget {
                     child: Column(
                       children: [
                         _buildTicketRow(
-                          "Nama Pemesan",
+                          t.name,
                           ticket.nama,
                           Icons.person_outline,
                           isDark,
                         ),
                         const SizedBox(height: 16),
                         _buildTicketRow(
-                          "Nomor WhatsApp",
+                          t.phoneNumber,
                           ticket.noTelp,
                           Icons.phone_android,
                           isDark,
                         ),
                         const SizedBox(height: 16),
                         _buildTicketRow(
-                          "Jumlah Pengunjung",
-                          "${ticket.jumlah} Orang",
+                          "Orang",
+                          "${ticket.jumlah} ${t.visitors}",
                           Icons.groups_outlined,
                           isDark,
                         ),
                         const SizedBox(height: 16),
                         _buildTicketRow(
-                          "Pemandu Wisata",
-                          ticket.pemandu == "iya"
-                              ? "Dengan Pemandu"
-                              : "Tanpa Pemandu",
+                          t.withGuide,
+                          ticket.pemandu == "iya" ? t.withGuide : t.withoutGuide,
                           Icons.tour_outlined,
                           isDark,
                         ),
@@ -117,14 +124,13 @@ class Ticket extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 20),
                           child: Divider(
                             color: isDark ? Colors.grey[700] : Colors.grey[300],
-                            thickness: 1,
                           ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "Total Bayar",
+                              "Jumlah",
                               style: TextStyle(
                                 fontSize: 14,
                                 color: subTextColor,
@@ -141,43 +147,42 @@ class Ticket extends StatelessWidget {
                           ],
                         ),
                         const SizedBox(height: 30),
-                        // QR Code Container
-                        Container(
-                          height: 80,
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: isDark ? Colors.grey[800] : Colors.grey[100],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Icon(
-                            Icons.qr_code_2,
-                            size: 60,
-                            color: isDark ? Colors.white70 : Colors.black54,
-                          ),
+                        Icon(
+                          Icons.qr_code_2,
+                          size: 80,
+                          color: isDark ? Colors.white70 : Colors.black54,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          "Tunjukkan tiket ini saat kedatangan",
+                          t.showTicket,
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 10, color: subTextColor),
                         ),
                       ],
                     ),
                   ),
-                  // Tombol Kembali
                   Padding(
-                    padding: const EdgeInsets.only(
-                      bottom: 20,
-                      left: 24,
-                      right: 24,
-                    ),
+                    padding: const EdgeInsets.all(24.0),
                     child: SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed:
-                            () => Navigator.pop(
-                              context,
-                            ), // Cukup Pop saja agar tidak menumpuk stack
+                        onPressed: () {
+                          String currentLang = Localizations.localeOf(context).languageCode;
+                          
+                          
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MainScreen(
+                                onToggle: onToggle, 
+                                onLangChange: onLangChange,
+                                isDark: isDark,
+                                currentLang: currentLang,
+                              ),
+                            ),
+                            (route) => false,
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           padding: const EdgeInsets.symmetric(vertical: 15),
@@ -185,9 +190,9 @@ class Ticket extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text(
-                          "Kembali Ke Beranda",
-                          style: TextStyle(
+                        child: Text(
+                          t.backHome,
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -204,7 +209,6 @@ class Ticket extends StatelessWidget {
     );
   }
 
-  // Helper Row yang mendukung Dark Mode
   Widget _buildTicketRow(
     String label,
     String value,

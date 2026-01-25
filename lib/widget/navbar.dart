@@ -27,7 +27,7 @@ class CustomBottomNav extends StatelessWidget {
 
         BottomNavigationBarItem(
           icon: Icon(Icons.assignment, size: 30),
-          label: 'Discover',
+          label: 'Ticket',
         ),
 
         BottomNavigationBarItem(

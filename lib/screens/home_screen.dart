@@ -27,7 +27,12 @@ Future<Map<String, dynamic>> getWeatherData(
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.isDark, required this.onToggle, required this.onLangChange});
+  const HomeScreen({
+    super.key,
+    required this.isDark,
+    required this.onToggle,
+    required this.onLangChange,
+  });
   final bool isDark;
   final Function(bool) onToggle;
   final Function(String) onLangChange;
@@ -422,7 +427,12 @@ class _HomeScreenState extends State<HomeScreen>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => Booking(isDark: widget.isDark, onToggle: widget.onToggle, onLangChange: widget.onLangChange,),
+                          builder:
+                              (context) => Booking(
+                                isDark: widget.isDark,
+                                onToggle: widget.onToggle,
+                                onLangChange: widget.onLangChange,
+                              ),
                         ),
                       );
                     },

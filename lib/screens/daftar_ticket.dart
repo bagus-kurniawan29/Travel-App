@@ -7,10 +7,10 @@ import 'package:travel_app/l10n/app_localizations.dart';
 class DaftarTicket extends StatefulWidget {
   // 1. Constructor harus nerima semua callback buat dioper ke halaman Ticket nanti
   const DaftarTicket({
-    super.key, 
-    required this.isDark, 
-    required this.onToggle, 
-    required this.onLangChange
+    super.key,
+    required this.isDark,
+    required this.onToggle,
+    required this.onLangChange,
   });
 
   final bool isDark;
@@ -108,12 +108,13 @@ class _DaftarTicketState extends State<DaftarTicket> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => Ticket(
-                          ticket: data, 
-                          isDark: isDark, 
-                          onToggle: widget.onToggle, 
-                          onLangChange: widget.onLangChange,
-                        ),
+                        builder:
+                            (_) => Ticket(
+                              ticket: data,
+                              isDark: isDark,
+                              onToggle: widget.onToggle,
+                              onLangChange: widget.onLangChange,
+                            ),
                       ),
                     );
                   },

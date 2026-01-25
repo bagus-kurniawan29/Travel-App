@@ -110,12 +110,11 @@ class _MapWidgetState extends State<MapWidget> with TickerProviderStateMixin {
             ),
             children: [
               TileLayer(
-                // Gunakan Tile Layer gelap jika isDark aktif
-                urlTemplate:
-                    widget.isDark
-                        ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-                        : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.example.travel_app',
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'com.travel_app', // GANTI PAKE ID APP LU
+                retinaMode: RetinaMode.isHighDensity(
+                  context,
+                ), // Sekalian hapus warning di terminal tadi
               ),
               PolylineLayer(
                 polylines: [

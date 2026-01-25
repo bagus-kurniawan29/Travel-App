@@ -6,17 +6,14 @@ import 'package:travel_app/l10n/app_localizations.dart';
 class Ticket extends StatelessWidget {
   final TicketData ticket;
   final bool isDark;
-  
-  
   final Function(bool) onToggle;
   final Function(String) onLangChange;
 
   const Ticket({
-    super.key, 
-    required this.ticket, 
+    super.key,
+    required this.ticket,
     required this.isDark,
-    
-    required this.onToggle, 
+    required this.onToggle,
     required this.onLangChange,
   });
 
@@ -34,7 +31,10 @@ class Ticket extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: textColor),
-        title: Text("Order Ticket", style: TextStyle(color: textColor)),
+        title: Text(
+          "Order Ticket",
+          style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -167,21 +167,16 @@ class Ticket extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          String currentLang = Localizations.localeOf(context).languageCode;
-                          
-                          
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => MainScreen(
-                                onToggle: onToggle, 
-                                onLangChange: onLangChange,
-                                isDark: isDark,
-                                currentLang: currentLang,
-                              ),
-                            ),
-                            (route) => false,
-                          );
+                          // 1. Cari State MainScreen selagi halaman Ticket masih ada di layar
+                          final mainState = context.findAncestorStateOfType<MainScreenState>();
+
+                          // 2. Jika ketemu, panggil method setTab(1) untuk pindah ke Daftar Ticket
+                          if (mainState != null) {
+                            mainState.setTab(1);
+                          }
+
+                          // 3. Terakhir baru lakukan Pop kembali ke Home
+                          Navigator.popUntil(context, (route) => route.isFirst);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,

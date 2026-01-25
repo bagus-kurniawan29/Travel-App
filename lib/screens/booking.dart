@@ -55,9 +55,9 @@ class Booking extends StatefulWidget {
   final Function(String) onLangChange;
 
   const Booking({
-    super.key, 
+    super.key,
     required this.isDark,
-    required this.onToggle, 
+    required this.onToggle,
     required this.onLangChange,
   });
 
@@ -171,10 +171,14 @@ class _BookingState extends State<Booking> {
                             child: Row(
                               children: [
                                 IconButton(
-                                  onPressed: () => setState(() {
-                                    if (count > 1) count--;
-                                  }),
-                                  icon: const Icon(Icons.remove_circle_outline, color: Colors.blue),
+                                  onPressed:
+                                      () => setState(() {
+                                        if (count > 1) count--;
+                                      }),
+                                  icon: const Icon(
+                                    Icons.remove_circle_outline,
+                                    color: Colors.blue,
+                                  ),
                                 ),
                                 Text(
                                   count.toString(),
@@ -185,10 +189,14 @@ class _BookingState extends State<Booking> {
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed: () => setState(() {
-                                    count++;
-                                  }),
-                                  icon: const Icon(Icons.add_circle_outline, color: Colors.blue),
+                                  onPressed:
+                                      () => setState(() {
+                                        count++;
+                                      }),
+                                  icon: const Icon(
+                                    Icons.add_circle_outline,
+                                    color: Colors.blue,
+                                  ),
                                 ),
                               ],
                             ),
@@ -199,23 +207,50 @@ class _BookingState extends State<Booking> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          _guideButton(false, t.withoutGuide, Icons.person, isDark),
+                          _guideButton(
+                            false,
+                            t.withoutGuide,
+                            Icons.person,
+                            isDark,
+                          ),
                           _guideButton(true, t.withGuide, Icons.flag, isDark),
                         ],
                       ),
                       const SizedBox(height: 40),
-                      Divider(color: isDark ? Colors.grey[700] : Colors.grey[300], thickness: 1),
+                      Divider(
+                        color: isDark ? Colors.grey[700] : Colors.grey[300],
+                        thickness: 1,
+                      ),
                       const SizedBox(height: 15),
-                      _priceRow(t.visitors, "+${baseprice * count}", subTextColor),
-                      _priceRow(guide ? t.withGuide : t.withoutGuide, guide ? "+50.000" : "0", subTextColor),
+                      _priceRow(
+                        t.visitors,
+                        "+${baseprice * count}",
+                        subTextColor,
+                      ),
+                      _priceRow(
+                        guide ? t.withGuide : t.withoutGuide,
+                        guide ? "+50.000" : "0",
+                        subTextColor,
+                      ),
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(t.bill, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor)),
+                          Text(
+                            t.bill,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
+                          ),
                           Text(
                             "Rp ${calculateTotal().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}",
-                            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
+                            ),
                           ),
                         ],
                       ),
@@ -225,7 +260,8 @@ class _BookingState extends State<Booking> {
                 const SizedBox(height: 40),
                 ElevatedButton(
                   onPressed: () async {
-                    if (nameController.text.isEmpty || phoneController.text.isEmpty) {
+                    if (nameController.text.isEmpty ||
+                        phoneController.text.isEmpty) {
                       _showSnackBar("Harap isi semua data pemesan");
                       return;
                     }
@@ -239,18 +275,21 @@ class _BookingState extends State<Booking> {
                       tanggalPemesanan: DateTime.now(),
                     );
                     try {
-                      await DatabaseHelper().insertTicket(ticket.databaseticket());
+                      await DatabaseHelper().insertTicket(
+                        ticket.databaseticket(),
+                      );
                       if (mounted) {
                         // 2. FIX: Kirim SEMUA parameter ke halaman Ticket biar navigasi baliknya sinkron
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => Ticket(
-                              ticket: ticket, 
-                              isDark: isDark,
-                              onToggle: widget.onToggle,
-                              onLangChange: widget.onLangChange,
-                            ),
+                            builder:
+                                (_) => Ticket(
+                                  ticket: ticket,
+                                  isDark: isDark,
+                                  onToggle: widget.onToggle,
+                                  onLangChange: widget.onLangChange,
+                                ),
                           ),
                         );
                       }
@@ -261,11 +300,17 @@ class _BookingState extends State<Booking> {
                   style: ElevatedButton.styleFrom(
                     minimumSize: const Size(double.infinity, 55),
                     backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                   ),
                   child: const Text(
                     "Pesan Sekarang",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -285,7 +330,10 @@ class _BookingState extends State<Booking> {
       filled: true,
       fillColor: isDark ? Colors.grey[850] : Colors.white,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-      focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: Colors.blue)),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(16),
+        borderSide: const BorderSide(color: Colors.blue),
+      ),
     );
   }
 
@@ -294,16 +342,36 @@ class _BookingState extends State<Booking> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         fixedSize: const Size(140, 100),
-        backgroundColor: selected ? Colors.blueAccent : (isDark ? Colors.grey[800] : Colors.grey[200]),
+        backgroundColor:
+            selected
+                ? Colors.blueAccent
+                : (isDark ? Colors.grey[800] : Colors.grey[200]),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
       onPressed: () => setState(() => guide = isActive),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: selected ? Colors.white : (isDark ? Colors.white70 : Colors.black), size: 28),
+          Icon(
+            icon,
+            color:
+                selected
+                    ? Colors.white
+                    : (isDark ? Colors.white70 : Colors.black),
+            size: 28,
+          ),
           const SizedBox(height: 8),
-          Text(label, textAlign: TextAlign.center, style: TextStyle(fontSize: 12, color: selected ? Colors.white : (isDark ? Colors.white70 : Colors.black))),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              color:
+                  selected
+                      ? Colors.white
+                      : (isDark ? Colors.white70 : Colors.black),
+            ),
+          ),
         ],
       ),
     );
@@ -316,7 +384,10 @@ class _BookingState extends State<Booking> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(label, style: TextStyle(color: color)),
-          Text(value, style: TextStyle(color: color, fontWeight: FontWeight.w500)),
+          Text(
+            value,
+            style: TextStyle(color: color, fontWeight: FontWeight.w500),
+          ),
         ],
       ),
     );

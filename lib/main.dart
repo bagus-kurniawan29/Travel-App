@@ -27,7 +27,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isDark = false;
-
   Locale _currentLocale = const Locale('id');
 
   void toggleTheme(bool value) {
@@ -69,11 +68,6 @@ class _MyAppState extends State<MyApp> {
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
         scaffoldBackgroundColor: Colors.grey[100],
-        textSelectionTheme: TextSelectionThemeData(
-          selectionColor: Colors.blue,
-          cursorColor: Colors.blue,
-          selectionHandleColor: Colors.blue,
-        ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
@@ -82,6 +76,7 @@ class _MyAppState extends State<MyApp> {
       themeMode: _isDark ? ThemeMode.dark : ThemeMode.light,
 
       home: MainScreen(
+        initialIndex: 0,
         isDark: _isDark,
         onToggle: toggleTheme,
         currentLang: _currentLocale.languageCode,

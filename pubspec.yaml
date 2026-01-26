@@ -47,6 +47,16 @@ dependencies:
   intl: ^0.20.0
   provider: ^6.1.1
   connectivity_plus: ^7.0.0
+  flutter_native_splash: ^2.4.7
+
+flutter_native_splash:
+  color: "#2196F3"
+  image: assets/img/logo.png 
+  
+  android_12:
+    color: "#2196F3"
+    icon_background_color: "#2196F3"
+    image: assets/img/logo.png
 
 dev_dependencies:
   flutter_test:
@@ -70,13 +80,13 @@ flutter:
   assets:
     - assets/frame/iphone Frame.png
     - assets/frame/non Frame.png
+    - assets/img/logo.png
     - assets/img/Rinjani.jpg
     - assets/img/rinjani 1.png
     - assets/img/rinjani 2.jpg
     - assets/img/rinjani 3.jpeg
     - assets/img/rinjani 4.webp
-    - assets/img/rinjani 5.jpg  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/to/resolution-aware-images
+    - assets/img/rinjani 5.jpg 
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package

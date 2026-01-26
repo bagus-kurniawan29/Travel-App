@@ -3,9 +3,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <application
-        android:label="travel_app"
+        android:label="E-Booking Rinjani"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/logo">
         
         <meta-data android:name="com.google.android.geo.API_KEY"
                    android:value="AIzaSyCxmPiVRwyPQwuo1gxi4SpWeCa0xT359Rg" /> <activity

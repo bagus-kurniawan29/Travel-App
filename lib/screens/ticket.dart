@@ -106,8 +106,8 @@ class Ticket extends StatelessWidget {
                         _buildTicketRow(
                           t.withGuide,
                           ticket.pemandu == "iya"
-                              ? t.withGuide
-                              : t.withoutGuide,
+                              ? 'Dengan Pemandu'
+                              : 'Tanpa Pemandu',
                           Icons.tour_outlined,
                           isDark,
                         ),

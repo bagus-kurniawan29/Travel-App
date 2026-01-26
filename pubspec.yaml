@@ -51,12 +51,12 @@ dependencies:
 
 flutter_native_splash:
   color: "#2196F3"
-  image: assets/img/logo.png 
+  image: assets/img/splash.png 
   
   android_12:
     color: "#2196F3"
     icon_background_color: "#2196F3"
-    image: assets/img/logo.png
+    image: assets/img/splash.png
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +80,7 @@ flutter:
   assets:
     - assets/frame/iphone Frame.png
     - assets/frame/non Frame.png
+    - assets/img/splash.png
     - assets/img/logo.png
     - assets/img/Rinjani.jpg
     - assets/img/rinjani 1.png

@@ -31,10 +31,6 @@ class Ticket extends StatelessWidget {
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: textColor),
-        title: Text(
-          "Order Ticket",
-          style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
-        ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -109,7 +105,9 @@ class Ticket extends StatelessWidget {
                         const SizedBox(height: 16),
                         _buildTicketRow(
                           t.withGuide,
-                          ticket.pemandu == "iya" ? t.withGuide : t.withoutGuide,
+                          ticket.pemandu == "iya"
+                              ? t.withGuide
+                              : t.withoutGuide,
                           Icons.tour_outlined,
                           isDark,
                         ),
@@ -167,15 +165,14 @@ class Ticket extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          // 1. Cari State MainScreen selagi halaman Ticket masih ada di layar
-                          final mainState = context.findAncestorStateOfType<MainScreenState>();
+                          final mainState =
+                              context
+                                  .findAncestorStateOfType<MainScreenState>();
 
-                          // 2. Jika ketemu, panggil method setTab(1) untuk pindah ke Daftar Ticket
                           if (mainState != null) {
                             mainState.setTab(1);
                           }
 
-                          // 3. Terakhir baru lakukan Pop kembali ke Home
                           Navigator.popUntil(context, (route) => route.isFirst);
                         },
                         style: ElevatedButton.styleFrom(

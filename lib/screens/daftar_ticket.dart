@@ -37,10 +37,6 @@ class _DaftarTicketState extends State<DaftarTicket> {
         elevation: 0,
         centerTitle: true,
         iconTheme: IconThemeData(color: textColor),
-        title: Text(
-          "Daftar Ticket", // Lo bisa ganti pake t.ticketList kalau ada di l10n
-          style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
-        ),
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
         future: DatabaseHelper().queryAllTickets(),

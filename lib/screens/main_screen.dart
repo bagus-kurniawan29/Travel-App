@@ -17,26 +17,23 @@ class MainScreen extends StatefulWidget {
     required this.currentLang,
     required this.onToggle,
     required this.onLangChange,
-    this.initialIndex = 0, 
+    this.initialIndex = 0,
   });
 
   @override
   State<MainScreen> createState() => MainScreenState();
 }
 
-
 class MainScreenState extends State<MainScreen> {
-  
-  int selectedIndex = 0; 
+  int selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
-    
+
     selectedIndex = widget.initialIndex;
   }
 
-  
   void setTab(int index) {
     setState(() {
       selectedIndex = index;
@@ -66,7 +63,7 @@ class MainScreenState extends State<MainScreen> {
 
     return Scaffold(
       extendBody: true,
-      
+
       body: IndexedStack(index: selectedIndex, children: pages),
       bottomNavigationBar: CustomBottomNav(
         currentIndex: selectedIndex,

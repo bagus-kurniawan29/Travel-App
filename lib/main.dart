@@ -6,6 +6,7 @@ import 'package:travel_app/l10n/app_localizations.dart';
 import 'package:travel_app/widget/iphone14_frame.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'screens/main_screen.dart';
+import 'package:travel_app/widget/internet_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -75,12 +76,15 @@ class _MyAppState extends State<MyApp> {
       ),
       themeMode: _isDark ? ThemeMode.dark : ThemeMode.light,
 
-      home: MainScreen(
-        initialIndex: 0,
+      home: InternetWrapper(
         isDark: _isDark,
-        onToggle: toggleTheme,
-        currentLang: _currentLocale.languageCode,
-        onLangChange: toggleLanguage,
+        child: MainScreen(
+          initialIndex: 0,
+          isDark: _isDark,
+          onToggle: toggleTheme,
+          currentLang: _currentLocale.languageCode,
+          onLangChange: toggleLanguage,
+        ),
       ),
 
       builder: (context, child) {

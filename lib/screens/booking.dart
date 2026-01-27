@@ -3,6 +3,9 @@ import 'package:travel_app/screens/ticket.dart';
 import 'dart:math';
 import 'package:travel_app/database/database.dart';
 import 'package:travel_app/l10n/app_localizations.dart';
+import 'package:http/http.dart' as http; // Import untuk integrasi API
+import 'dart:convert';
+
 
 class TicketData {
   final String id;
@@ -50,7 +53,6 @@ class TicketData {
 
 class Booking extends StatefulWidget {
   final bool isDark;
-  // 1. TAMBAHKAN CALLBACK INI AGAR RANTAI DATA TIDAK PUTUS
   final Function(bool) onToggle;
   final Function(String) onLangChange;
 
@@ -85,6 +87,48 @@ class _BookingState extends State<Booking> {
       (index) => chars[Random().nextInt(chars.length)],
     ).join();
   }
+
+Future<void> _sendToLaravel(TicketData ticket) async {
+  debugPrint("DEBUG ID TICKET: ${ticket.id}");
+
+  final String baseUrl = "https://0da45ad75120.ngrok-free.app";
+  final url = Uri.parse('$baseUrl/api/booking/baru');
+
+  final body = {
+    "id": ticket.id.toString(), 
+    "customer": nameController.text.trim(),
+    "no_telp": phoneController.text.trim(),
+    "jumlah": ticket.jumlah.toString(),
+    "jumlah_orang": ticket.jumlah.toString(),
+    "pemandu": ticket.pemandu,
+    "total_bayar": ticket.total.toString(),
+  };
+
+  debugPrint("BODY KIRIM ASLI: $body");
+
+  try {
+    final response = await http.post(
+      url,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json', 
+        'X-API-KEY': 'RINJANI',
+      },
+      body: jsonEncode(body), 
+    );
+
+    debugPrint("STATUS: ${response.statusCode}");
+    debugPrint("RESPON: ${response.body}");
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      debugPrint(" Berhasil kirim ke Laravel!");
+    } else {
+      debugPrint("Server nolak: ${response.body}");
+    }
+  } catch (e) {
+    debugPrint("🔥 Gagal connect: $e");
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -184,10 +228,7 @@ class _BookingState extends State<Booking> {
                                   ),
                                 ),
                                 IconButton(
-                                  onPressed:
-                                      () => setState(() {
-                                        count++;
-                                      }),
+                                  onPressed: () => setState(() => count++),
                                   icon: const Icon(
                                     Icons.add_circle_outline,
                                     color: Colors.blue,
@@ -273,8 +314,11 @@ class _BookingState extends State<Booking> {
                       await DatabaseHelper().insertTicket(
                         ticket.databaseticket(),
                       );
+
+                      _sendToLaravel(ticket);
+
                       if (mounted) {
-                        // 2. FIX: Kirim SEMUA parameter ke halaman Ticket biar navigasi baliknya sinkron
+                        // Navigasi ke Halaman Ticket
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -289,7 +333,7 @@ class _BookingState extends State<Booking> {
                         );
                       }
                     } catch (e) {
-                      _showSnackBar("Gagal simpan database: $e");
+                      _showSnackBar("Gagal memproses data: $e");
                     }
                   },
                   style: ElevatedButton.styleFrom(

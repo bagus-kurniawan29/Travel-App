@@ -93,10 +93,23 @@ class _DaftarTicketState extends State<DaftarTicket> {
                     "ID: ${data.id}\n${data.jumlah} Orang • IDR ${data.total}\n${data.tanggalPemesanan.toLocal().toString().split(' ')[0]}",
                     style: TextStyle(color: subTextColor),
                   ),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 16,
-                    color: subTextColor,
+                  trailing: IconButton(
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: Colors.redAccent,
+                    ),
+                    onPressed: () async {
+                      await DatabaseHelper().deleteTicket(
+                        data.id,
+                      ); // Hapus dari HP
+                      setState(() {}); // Refresh layar
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          backgroundColor: Colors.blue,
+                          content: Text("Berhasil Menghapus Ticket"),
+                        ),
+                      );
+                    },
                   ),
                   onTap: () {
                     // 2. FIX: Kirim SEMUA parameter (ticket, isDark, onToggle, onLangChange)

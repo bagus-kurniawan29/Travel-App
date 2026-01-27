@@ -135,7 +135,7 @@ class Ticket extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "Rp ${ticket.total}",
+                              "Rp ${ticket.total.replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}",
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,

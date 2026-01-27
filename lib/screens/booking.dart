@@ -95,16 +95,11 @@ class _BookingState extends State<Booking> {
 
     return Scaffold(
       backgroundColor: isDark ? Colors.grey[900] : Colors.white,
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 50.0, left: 10),
-        child: FloatingActionButton(
-          mini: true,
-          backgroundColor: isDark ? Colors.grey[800] : Colors.white,
-          elevation: 2,
-          onPressed: () => Navigator.pop(context),
-          child: Icon(Icons.arrow_back, color: textColor),
-        ),
+      appBar: AppBar(
+        backgroundColor: isDark ? Colors.grey[900] : Colors.white,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: textColor),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -113,7 +108,7 @@ class _BookingState extends State<Booking> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 105),
+                const SizedBox(height: 10),
                 Text(
                   t.addData,
                   style: const TextStyle(

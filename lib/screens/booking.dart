@@ -91,7 +91,7 @@ class _BookingState extends State<Booking> {
 Future<void> _sendToLaravel(TicketData ticket) async {
   debugPrint("DEBUG ID TICKET: ${ticket.id}");
 
-  final String baseUrl = "https://0da45ad75120.ngrok-free.app";
+  final String baseUrl = "ngrok http --url=diluvial-dieociously-willian.ngrok-free.dev 8000";
   final url = Uri.parse('$baseUrl/api/booking/baru');
 
   final body = {
